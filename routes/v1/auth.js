@@ -14,63 +14,25 @@ const User = require("../../models/User");
 /* POST route creates a user. */
 router.post("/auth/signup", (req, res, next) => {
     const { errors, isValid } = validation.register(req.body);
-    // Check Validation
     if (!isValid) {
         return res.status(400).json(errors);
     }
     User.findOne({ email: req.body.email }).then(user => {
-        if (user) {
-            return res
-                .status(400)
-                .json({ email: "User with this email already exist" });
-        } else {
-            const newUser = new User({
-                email: req.body.email,
-                password: req.body.password,
-                bankName: req.body.bankName,
-                tellerNumber: req.body.tellerNumber,
-                tellerDate: moment(req.body.tellerDate),
-                name: req.body.name,
-                phone: req.body.phone,
-                gender: req.body.gender,
-                tshirtSize: req.body.tshirtSize,
-                memberStatus: req.body.memberStatus,
-                icanCode: req.body.icanCode,
-                memberCategory: req.body.memberCategory,
-                memberAcronym: req.body.memberAcronym,
-                nameOfSociety: req.body.nameOfSociety,
-                role: { name: "User" },
-            });
+        if (user) return res
+            .status(400)
+            .json({ email: "User with this email already exist" });
+        const newUser = new User({
+            ...req.body,
+            tellerDate: moment(req.body.tellerDate),
+            role: { name: "User" },
+        });
 
-            newUser.save().then(user => {
-                res.json({
-                    message: "User created sucessfully",
-                    success: true
-                });
-            }).catch(err => {
-                res.json(err)
+        newUser.save().then(() =>
+            res.json({
+                message: "User created sucessfully",
+                success: true
             })
-            // bcrypt.genSalt(10, (err, salt) => {
-            //     bcrypt.hash(req.body.password, salt, (err, hash) => {
-            //         if (err) throw err;
-            //         newUser.password = hash;
-            //         newUser
-            //             .save()
-            //             .then(user => {
-            //                 sms.sendOne(req.body.phone, `Dear ${req.body.name}, You Have Successfully Registered for the 2020 ICAN Southern Conference. Here are your login details: Username: ${req.body.email}. password: ${req.body.password} `);
-            //                 mail.SendMail(user.email, "SUCCESSFULL REGISTRATION", template.register(req.body.name, req.body.email, req.body.password));
-            //                 const payload = {
-            //                     id: user.id
-            //                 };
-            //                 res.json({
-            //                     message: "User created sucessfully",
-            //                     success: true
-            //                 });
-            //             })
-            //             .catch(err => res.json(err));
-            //     });
-            // });
-        }
+        ).catch(err => res.json(err))
     });
 });
 

@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const mongooseSchema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
-const nairaFormater = require("../helpers/nairaFormater");
 const mail = require("../helpers/mailgun");
 const sms = require("../helpers/sms")
 const template = require("../helpers/email.template");
@@ -26,50 +25,37 @@ const userSchema = mongooseSchema({
     memberStatus: { type: String, trim: true, required: true },
     amount: {
         type: String, trim: true, required: true, default: function () {
-            if (this.memberStatus.toLowerCase() !== "member") {
-                return nairaFormater(35000);
-            };
-
-            if (this.memberStatus.toLowerCase() === "member") {
-                if (this.memberCategory.toLowerCase() === "full-paying member") {
-                    return nairaFormater(30000);
-                } else if (this.memberCategory.toLowerCase() === "half-paying member") {
-                    return nairaFormater(15000);
-                } else if (this.memberCategory.toLowerCase() === "admin") {
-                    return nairaFormater(0);
-                } else if (this.memberCategory.toLowerCase() === "planning") {
-                    return nairaFormater(0);
-                }
-            }
+            const memberCategory = this.memberCategory.toLowerCase();
+            if (this.memberStatus.toLowerCase() !== "member") return 30000;
+            if (memberCategory === "full-paying member") return 25000;
+            if (memberCategory === "half-paying member") return 15000;
+            if (memberCategory === "admin" || memberCategory === "planning") return 0;
         }
     },
     confirmedPayment: {
         type: Boolean, required: true, default: function () {
-            if (this.memberCategory.toLowerCase() === "admin" || this.memberCategory.toLowerCase() === "planning") {
-                return true
-            } else {
-                return false
-            }
+            if (this.memberCategory.toLowerCase() === "admin" || this.memberCategory.toLowerCase() === "planning") return true
+            return false
         }
     },
     icanCode: {
         type: String, trim: true, required: function () {
-            return this.memberStatus.toLowerCase() === "ican member";
+            return this.memberStatus.toLowerCase() === "member";
         }
     },
     memberCategory: {
         type: String, trim: true, required: function () {
-            return this.memberStatus.toLowerCase() === "ican member";
+            return this.memberStatus.toLowerCase() === "member";
         }
     },
     memberAcronym: {
         type: String, trim: true, required: function () {
-            return this.memberStatus.toLowerCase() === "ican member";
+            return this.memberStatus.toLowerCase() === "member";
         }
     },
     nameOfSociety: {
         type: String, trim: true, required: function () {
-            return this.memberStatus.toLowerCase() === "ican member";
+            return this.memberStatus.toLowerCase() === "member";
         }
     },
 
@@ -89,7 +75,7 @@ userSchema.pre("save", function (next) {
     });
 });
 
-userSchema.post("save", function(){
+userSchema.post("save", function () {
     let user = this;
     if (user.confirmedPayment) {
         const invoice = new Invoice({
@@ -105,8 +91,6 @@ userSchema.post("save", function(){
         });
         invoice.save().then(value => value).catch(err => err)
         sms.sendOne(user.phone, `Dear ${user.name}, your Payment for ICAN 2020 Conference has been confirmed.`);
-
-        // email.confirmPayent();
     }
 })
 module.exports = User = mongoose.model("user", userSchema);

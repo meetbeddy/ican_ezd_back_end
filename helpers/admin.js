@@ -5,6 +5,7 @@ const sms = require("./sms");
 const email = require("./email.template");
 const mail = require("./mailgun");
 const Jimp = require("jimp");
+const moment = require("moment")
 
 
 module.exports = {
@@ -115,6 +116,7 @@ module.exports = {
                 } else {
                     value.confirmedPayment = false
                 }
+                value.tellerDate = moment().format()
                 value.role = [{ name: value.role }]
                 return value
             });

@@ -3,7 +3,8 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const passport = require("passport");
-const path = require("path");
+const cors = require('cors');
+
 
 const authRoute = require("./routes/v1/auth");
 const AdminRoute = require("./routes/v1/admin");
@@ -21,7 +22,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(passport.initialize());
 require("./config/passport")(passport);
-
+app.use(cors())
 app.use("/api/user", authRoute);
 app.use("/api/admin", AdminRoute);
 app.use("/api/attendant", userRoute);

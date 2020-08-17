@@ -24,7 +24,7 @@ const userSchema = mongooseSchema({
     tshirtSize: { type: String, trim: true, required: true },
     memberStatus: { type: String, trim: true, required: true },
     amount: {
-        type: String, trim: true, required: true, default: function () {
+        type: String, trim: true, default: function () {
             const memberCategory = this.memberCategory.toLowerCase();
             if (this.memberStatus.toLowerCase() !== "member") return 30000;
             if (memberCategory === "full-paying member") return 25000;

@@ -15,6 +15,7 @@ const moment = require("moment");
 
 const User = require("./models/User");
 const Setting = require("./models/Settings");
+const Receipt = require("./models/Invoice");
 
 dotenv.config();
 const app = express();
@@ -30,13 +31,13 @@ app.use("/api", api);
 // Server static assets if in production
 const port = process.env.PORT || 5000;
 mongoose.set('useCreateIndex', true)
-mongoose.connect(process.env.MONGODBURI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+mongoose.connect(process.env.MONGODBURI, { useNewUrlParser: true, useUnifiedTopology: true }).then(async () => {
     Setting.find({}).then(setting => {
         if (!setting.length) {
             let cert = new Setting({ certificate: false });
             cert.save().then(() => console.log("CERT SET TO FALSE")).catch(err => console.log("CERT SET ERROR"))
         }
-    })
+    });
     User.find({ email: "admin@admin.com" }).then(user => {
         if (!user.length) {
             const admin = new User({

@@ -24,7 +24,7 @@ const userSchema = mongooseSchema({
     tshirtSize: { type: String, trim: true, required: true },
     memberStatus: { type: String, trim: true, required: true },
     amount: {
-        type: String, trim: true, default: function () {
+        type: Number, trim: true, default: function () {
             const memberCategory = this.memberCategory.toLowerCase();
             if (this.memberStatus.toLowerCase() !== "member") return 30000;
             if (memberCategory === "full-paying member") return 25000;
@@ -74,23 +74,4 @@ userSchema.pre("save", function (next) {
         });
     });
 });
-
-userSchema.post("save", function () {
-    let user = this;
-    if (user.confirmedPayment) {
-        const invoice = new Invoice({
-            user: user._id,
-            amount: user.amount,
-            invoiceId: new Date().getTime().toString().slice(5),
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            gender: user.gender,
-            shirtSize: user.tshirtSize,
-            society: user.nameOfSociety,
-        });
-        invoice.save().then(value => value).catch(err => err)
-        sms.sendOne(user.phone, `Dear ${user.name}, your Payment for ICAN 2020 Conference has been confirmed.`);
-    }
-})
 module.exports = User = mongoose.model("user", userSchema);

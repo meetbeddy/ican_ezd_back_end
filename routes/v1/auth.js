@@ -87,7 +87,7 @@ router.get("/auth/current/:id", (req, res, next) => {
         return res.status(400).json(errors);
     }
 
-    User.findById(req.params.id).then(user => {
+    User.findById(req.params.id, { password: false, __v: false }).then(user => {
 
         const userToSend = user;
         userToSend.password = "you are a fool";

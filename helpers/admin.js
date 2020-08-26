@@ -5,13 +5,47 @@ const sms = require("./sms");
 const email = require("./email.template");
 const mail = require("./mailgun");
 const Jimp = require("jimp");
-const moment = require("moment")
+const escapeRegex = require("./searchRegex")
+const moment = require("moment");
 
 
 module.exports = {
     usersProjection: {
         __v: false,
         password: false,
+    },
+    paginated: function (query, data, model) {
+        return async (req, res, next) => {
+            if (req.user.role[0].name.toLowerCase() !== "admin") {
+                return res.status(401).json({ message: "unauthorized" });
+            }
+            if (req.query.search) {
+                regex = new RegExp(escapeRegex(req.query.search), 'gi');
+                const result = {}
+                query.name = regex;
+                result.page = parseInt(req.query.page) || 1;
+                result.count = await await model.countDocuments(query);
+                try {
+                    result.data = await model.find(query, data).limit(parseInt(req.query.size || 10)).skip(((parseInt(req.query.page) || 1) - 1) * (parseInt(req.query.size) || 10)).exec();
+                    req.result = result
+                    next()
+                } catch (e) {
+                    res.status(400).json({ message: e.message })
+                }
+                next()
+            }
+            const result = {}
+            result.page = parseInt(req.query.page) || 1;
+            result.count = await await model.countDocuments(query);
+            try {
+                result.data = await model.find(query, data).limit(parseInt(req.query.size || 10)).skip(((parseInt(req.query.page) || 1) - 1) * (parseInt(req.query.size) || 10)).exec();
+                req.result = result
+                next()
+            } catch (e) {
+                res.status(400).json({ message: e.message })
+            }
+            next()
+        }
     },
     getAllUsers: function () {
         return new Promise((resolve, reject) => {
@@ -23,25 +57,25 @@ module.exports = {
             })
         })
     },
-    activeUser: function (email) {
+    activeUser: function (id) {
         return new Promise((resolve, reject) => {
-            User.findOneAndUpdate({ email }, { status: "active" })
+            User.findOneAndUpdate({ _id: id }, { status: "active" }, { useFindAndModify: false })
                 .then(user => {
                     resolve(user)
                 }).catch(err => reject(err))
         })
     },
-    dectiveUser: function (email) {
+    dectiveUser: function (id) {
         return new Promise((resolve, reject) => {
-            User.findOneAndUpdate({ email }, { status: "not active" })
+            User.findOneAndUpdate({ _id: id }, { status: "banned" }, { useFindAndModify: false })
                 .then(user => {
-                    resolve(user)
+                    resolve({ message: "success", error: null })
                 }).catch(err => reject(err))
         })
     },
     comfirmPayment: function (id) {
         return new Promise((resolve, reject) => {
-            User.findByIdAndUpdate({ _id: id }, { confirmedPayment: true }, this.usersProjection).then(user => {
+            User.findByIdAndUpdate({ _id: id }, { confirmedPayment: true }, { useFindAndModify: false }).then(user => {
                 if (!user) {
                     reject({ message: "No User Found" });
                     return;
@@ -57,17 +91,12 @@ module.exports = {
                     shirtSize: user.tshirtSize,
                     society: user.nameOfSociety,
                 });
-
-                sms.sendOne(user.phone, `Dear ${user.name}, your Payment for ICAN 2020 Conference has been confirmed.`);
-
-                // email.confirmPayent();
-
-
-                invoice.save().then().catch(err =>
-                    err
-                )
-                resolve(user)
+                invoice.save().then(value => {
+                    sms.sendOne(user.phone, `Dear ${user.name}, your Payment for ICAN 2020 Conference has been confirmed.`);
+                    resolve(user)
+                }).catch(err => reject(err))
             }).catch(err => {
+                console.log(err)
                 reject(err)
             })
         })
@@ -83,29 +112,9 @@ module.exports = {
     },
     updateUser: function (id, data) {
         return new Promise((resolve, reject) => {
-            if (!data.password) {
-                User.findOneAndUpdate({ email: data.email }, { email: data.email, name: data.name, gender: data.gender, icanCode: data.icanCode, memberAcronym: data.memberAcronym, memberCategory: data.memberCategory, amount: data.amount, memberStatus: data.memberStatus, nameOfSociety: data.nameOfSociety, tellerNumber: data.tellerNumber, tshirtSize: data.tshirtSize, bankName: data.bankName }, { useFindAndModify: false }).then(doc => {
-                    resolve(doc);
-                }).catch(err => reject(err))
-            } else {
-                User.findById(id).then(doc => {
-                    doc.email = data.email;
-                    doc.name = data.name;
-                    doc.gender = data.gender;
-                    doc.icanCode = data.icanCode;
-                    doc.memberAcronym = data.memberAcronym;
-                    doc.memberCategory = data.memberCategory;
-                    doc.amount = data.amount;
-                    doc.memberStatus = data.memberStatus;
-                    doc.nameOfSociety = data.nameOfSociety;
-                    doc.tellerNumber = data.tellerNumber;
-                    doc.password = data.password;
-                    doc.tshirtSize = data.tshirtSize;
-                    doc.bankName = data.bankName;
-                    doc.save().catch(err => err)
-                    resolve(doc)
-                }).catch(err => reject(err))
-            }
+            User.findOneAndUpdate({ _id: id }, { email: data.email, name: data.name, gender: data.gender, icanCode: data.icanCode, memberAcronym: data.memberAcronym, memberCategory: data.memberCategory, amount: data.amount, memberStatus: data.memberStatus, nameOfSociety: data.nameOfSociety, tellerNumber: data.tellerNumber, tshirtSize: data.tshirtSize, bankName: data.bankName, phone: data.phone }, { useFindAndModify: false }).then(doc => {
+                resolve(doc);
+            }).catch(err => reject(err))
         })
     },
     uploadUsers: function (data) {
@@ -182,5 +191,20 @@ module.exports = {
             let dataToSend = usersPhone.join(",");
             sms.sendMany(dataToSend, message).then(() => resolve(users.length)).catch(err => reject(err))
         })
+    },
+    getStats: async function (req, res, next) {
+        const stats = {}
+        const registered = await User.countDocuments();
+        const active = await User.countDocuments({ status: "active" });
+        const banned = await User.countDocuments({ status: "banned" });
+        const confirmed = await User.countDocuments({ confirmedPayment: true });
+        const unConfirmed = await User.countDocuments({ confirmedPayment: false });
+        stats.registered = registered;
+        stats.active = active;
+        stats.banned = banned;
+        stats.confirmed = confirmed;
+        stats.unConfirmed = unConfirmed;
+
+        res.json(stats)
     }
 }

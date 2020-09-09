@@ -194,16 +194,37 @@ module.exports = {
     },
     getStats: async function (req, res, next) {
         const stats = {}
-        const registered = await User.countDocuments();
-        const active = await User.countDocuments({ status: "active" });
-        const banned = await User.countDocuments({ status: "banned" });
-        const confirmed = await User.countDocuments({ confirmedPayment: true });
-        const unConfirmed = await User.countDocuments({ confirmedPayment: false });
-        stats.registered = registered;
-        stats.active = active;
-        stats.banned = banned;
-        stats.confirmed = confirmed;
-        stats.unConfirmed = unConfirmed;
+        const society = {};
+        const shirtSize = {}
+        const { balance } = await sms.getballance();
+        const users = await User.find();
+        const active = users.filter(value => value.status === "active");
+        const banned = users.filter(value => value.status === "banned");
+        const confirmed = users.filter(value => value.confirmedPayment);
+        const unConfirmed = users.filter(value => !value.confirmedPayment);
+        const fullPaymingMembers = confirmed.filter(value => value.memberCategory.toLowerCase().includes("full-paying") && value.memberStatus.toLowerCase() === "member");
+        const fullPaymingMembersTotal = fullPaymingMembers.reduce((acc, cur) => acc + cur.amount, 0);
+        const halfPaymingMembers = confirmed.filter(value => value.memberCategory.toLowerCase().includes("half-paying") && value.memberStatus.toLowerCase() === "member");
+        const halfPaymingMembersTotal = halfPaymingMembers.reduce((acc, cur) => acc + cur.amount, 0)
+        const nonMembers = users.filter(value => value.memberStatus.toLowerCase() === "nonmember");
+        const nonMembersTotal = nonMembers.reduce((acc, cur) => acc + cur.amount, 0);
+
+        users.forEach(user => {
+            society[user.nameOfSociety] = society[user.nameOfSociety] ? [...society[user.nameOfSociety], user] : [user];
+            shirtSize[user.tshirtSize] = shirtSize[user.tshirtSize] ? [...shirtSize[user.tshirtSize], user] : [user];
+
+        })
+        stats.registered = users.length;
+        stats.active = active.length;
+        stats.banned = banned.length;
+        stats.confirmed = confirmed.length;
+        stats.unConfirmed = unConfirmed.length;
+        stats.fullPaymingMembers = { numbers: fullPaymingMembers.length, amount: fullPaymingMembersTotal };
+        stats.halfPaymingMembers = { numbers: halfPaymingMembers.length, amount: halfPaymingMembersTotal };
+        stats.nonMembers = { numbers: nonMembers.length, amount: nonMembersTotal };
+        stats.society = society;
+        stats.shirtSize = shirtSize;
+        stats.balance = balance;
 
         res.json(stats)
     }

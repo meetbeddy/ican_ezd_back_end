@@ -26,9 +26,8 @@ const userSchema = mongooseSchema({
     amount: {
         type: Number, trim: true, default: function () {
             const memberCategory = this.memberCategory.toLowerCase();
-            if (this.memberStatus.toLowerCase() !== "member") return 30000;
-            if (memberCategory === "full-paying member") return 25000;
-            if (memberCategory === "half-paying member") return 15000;
+            if (this.memberStatus.toLowerCase() !== "member" || memberCategory === "half-paying member") return 15000;
+            if (memberCategory === "half-paying member") return 10000;
             if (memberCategory === "admin" || memberCategory === "planning") return 0;
         }
     },

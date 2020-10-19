@@ -197,7 +197,8 @@ module.exports = {
         const society = {};
         const shirtSize = {}
         const { balance } = await sms.getballance();
-        const users = await User.find();
+        let users = await User.find();
+        users = users.filter(value => value.memberCategory.toLowerCase() !== "admin");
         const active = users.filter(value => value.status === "active");
         const banned = users.filter(value => value.status === "banned");
         const confirmed = users.filter(value => value.confirmedPayment);

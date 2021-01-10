@@ -4,37 +4,40 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const validation = require("../../validation/general-validation");
 const moment = require("moment")
-// const mail = require("../../helpers/mailgun");
-// const sms = require("../../helpers/sms")
-// const template = require("../../helpers/email.template");
 
 //Models
 const User = require("../../models/User");
 
 /* POST route creates a user. */
-router.post("/auth/signup", (req, res, next) => {
+router.post("/auth/signup", async (req, res, next) => {
     const { errors, isValid } = validation.register(req.body);
     if (!isValid) {
         return res.status(400).json(errors);
     }
-    User.findOne({ email: req.body.email }).then(user => {
+    User.findOne({ email: req.body.email }).then(async user => {
+        const { memberStatus, nameOfSociety } = req.body;
         if (user) return res
             .status(400)
             .json({ email: "User with this email already exist" });
+        const halfPayingMembers = await User.find({ nameOfSociety, memberCategory: "half-paying member" });
+        if (halfPayingMembers.length >= 2) return res.status(400).json({ memberCategory: "More than 2 members have registerd as half-paying members for this district society, please contact admin" })
         const newUser = new User({
             ...req.body,
             tellerDate: moment(req.body.tellerDate),
             role: { name: "User" },
         });
-
-        newUser.save().then(() =>
-            res.json({
+        try {
+            await newUser.save();
+            return res.json({
                 message: "User created sucessfully",
                 success: true
             })
-        ).catch(err => res.json(err))
+        } catch (e) {
+            return res.status(400).json(e.message);
+        }
     });
 });
+
 
 /* POST route Logs user in. */
 router.post("/auth/signin", (req, res, next) => {

@@ -41,9 +41,13 @@ module.exports = {
         data.memberCategory = data.memberCategory === undefined ? "" : data.memberCategory;
         data.memberAcronym = data.memberAcronym === undefined ? "" : data.memberAcronym;
         data.nameOfSociety = data.nameOfSociety === undefined ? "" : data.nameOfSociety;
+        data.venue = data.venue === undefined ? "" : data.venue;
 
         if (Validator.isEmpty(data.bankName)) {
             errors.bankName = "bankName field is required";
+        }
+        if (Validator.isEmpty(data.venue)) {
+            errors.venue = "venue field is required";
         }
         if (Validator.isEmpty(data.tellerNumber)) {
             errors.tellerNumber = "tellerNumber field is required";

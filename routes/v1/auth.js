@@ -15,12 +15,14 @@ router.post("/auth/signup", async (req, res, next) => {
         return res.status(400).json(errors);
     }
     User.findOne({ email: req.body.email }).then(async user => {
-        const { memberStatus, nameOfSociety } = req.body;
+        const { memberCategory, nameOfSociety } = req.body;
         if (user) return res
             .status(400)
             .json({ email: "User with this email already exist" });
-        const halfPayingMembers = await User.find({ nameOfSociety, memberCategory: "half-paying member" });
-        if (halfPayingMembers.length >= 2) return res.status(400).json({ memberCategory: "More than 2 members have registerd as half-paying members for this district society, please contact admin" })
+        if (memberCategory === "half-paying member") {
+            const halfPayingMembers = await User.find({ nameOfSociety, memberCategory: "half-paying member" });
+            if (halfPayingMembers.length >= 2) return res.status(400).json({ memberCategory: "More than 2 members have registerd as half-paying members for this district society, please contact admin" })
+        }
         const newUser = new User({
             ...req.body,
             tellerDate: moment(req.body.tellerDate),

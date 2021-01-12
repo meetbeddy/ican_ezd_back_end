@@ -55,7 +55,7 @@ module.exports = {
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td class="esd-block-text es-p10t es-p20r es-p20l" bgcolor="#fcfcfc" align="left">
-                                                                                        <p>Hi ${name}, you have successfully registered for the up comming ICAN Southern Conference slated for Wednesday 7th - Thursday 8th October, 2020. The Conference Will Now Hold Virtually.</p>
+                                                                                        <p>Hi ${name}, you have successfully registered for the up comming ICAN Eastern Conference slated for Wednesday 3rd - Thursday 4th February, 2021. The Conference Will Now Hold Virtually and Physically.</p>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -86,7 +86,7 @@ module.exports = {
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td class="esd-block-button es-p20t es-p20b es-p10r es-p10l" align="center"><span class="es-button-border" style="background: #23395d;"><a href="http://icansouthernzonalconference.org.ng/login" class="es-button" target="_blank" style="background: #23395d; border-color: #23395d; color: #ffffff;">Log In Now</a></span></td>
+                                                                                    <td class="esd-block-button es-p20t es-p20b es-p10r es-p10l" align="center"><span class="es-button-border" style="background: #23395d;"><a href="https://www.icanezdconference.org.ng/login" class="es-button" target="_blank" style="background: #23395d; border-color: #23395d; color: #ffffff;">Log In Now</a></span></td>
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>
@@ -226,7 +226,7 @@ module.exports = {
                                                                     <tbody>
                                                                         <tr>
                                                                             <td esdev-links-color="#999999" class="esd-block-text" align="center">
-                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Southern Zonal Conference 2020.</p>
+                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2021.</p>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
@@ -263,7 +263,7 @@ module.exports = {
                                                                         <table width="100%" cellspacing="0" cellpadding="0">
                                                                             <tbody>
                                                                                 <tr>
-                                                                                    <td class="esd-block-image es-infoblock made_with" align="center"><a target="_blank" href="http://icansouthernzonalconference.org.ng/"><img src="https://i.ibb.co/WFrJD28/logo.png" alt style="display: block; width: 115px; height: 143px;" height="143"></a></td>
+                                                                                    <td class="esd-block-image es-infoblock made_with" align="center"><a target="_blank" href="https://www.icanezdconference.org.ng/"><img src="https://i.ibb.co/WFrJD28/logo.png" alt style="display: block; width: 115px; height: 143px;" height="143"></a></td>
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>
@@ -346,7 +346,7 @@ module.exports = {
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td class="esd-block-text es-m-txt-c es-p10t es-p10b" align="left">
-                                                                                            <p style="line-height: 150%;">Thank you for attending the 2020 ICAN SOUTHERN ZONAL CONFERENCE which held Virtually.</p>
+                                                                                            <p style="line-height: 150%;">Thank you for attending the 2021 ICAN Eastern ZONAL CONFERENCE.</p>
                                                                                             <p style="color: red; font-style: italic;text-align: center;">
                                                                                               Click Download to Download the IMAGE
                                                                                             </p>
@@ -434,7 +434,7 @@ module.exports = {
                                                                             <table cellpadding="0" cellspacing="0" width="100%">
                                                                                 <tbody>
                                                                                     <tr>
-                                                                                        <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank" href="http://icansouthernzonalconference.org.ng/"><img class="adapt-img" src="https://i.ibb.co/WFrJD28/logo.png" alt style="display: block;" width="72"></a></td>
+                                                                                        <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank" href="https://www.icanezdconference.org.ng/"><img class="adapt-img" src="https://i.ibb.co/WFrJD28/logo.png" alt style="display: block;" width="72"></a></td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>

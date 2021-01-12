@@ -69,7 +69,7 @@ userSchema.pre("save", function (next) {
         if (err) return next(err);
         bcrypt.hash(user.password, salt, (err, hash) => {
             if (err) return next(err);
-            sms.sendOne(user.phone, `Dear ${user.name}, You Have Successfully Registered for the 2020 ICAN Southern Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `);
+            sms.sendOne(user.phone, `Dear ${user.name}, You Have Successfully Registered for the 2021 ICAN Eastern Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `);
             mail.sendMail(user.email, "SUCCESSFULL REGISTRATION", template.register(user.name, user.email, user.password));
             user.password = hash;
             next();

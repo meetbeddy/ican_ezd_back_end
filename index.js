@@ -23,7 +23,7 @@ app.use("/api/user", authRoute);
 app.use("/api/admin", AdminRoute);
 app.use("/api/attendant", userRoute);
 app.use("/api", api);
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 // mongoose.set('useCreateIndex', true)
 // mongoose.connect(process.env.MONGODBURI, { useNewUrlParser: true, useUnifiedTopology: true });
 app.listen(port, () => console.log("App Running on Port " + port));

@@ -203,6 +203,8 @@ module.exports = {
             users = users.filter(value => value.memberCategory.toLowerCase() !== "admin");
             const active = users.filter(value => value.status === "active");
             const banned = users.filter(value => value.status === "banned");
+            const physical = users.filter(value => value.venue === "physical");
+            const virtual = users.filter(value => value.venue === "virtual");
             const confirmed = users.filter(value => value.confirmedPayment);
             const unConfirmed = users.filter(value => !value.confirmedPayment);
             const fullPaymingMembers = confirmed.filter(value => value.memberCategory.toLowerCase().includes("full-paying member") && value.memberStatus.toLowerCase() === "member");
@@ -228,6 +230,8 @@ module.exports = {
             stats.society = society;
             stats.shirtSize = shirtSize;
             stats.balance = balance;
+            stats.physical = physical.length;
+            stats.virtual = virtual.length;
     
             res.json(stats)
         } catch (e) {

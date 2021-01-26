@@ -194,12 +194,13 @@ module.exports = {
     },
     getStats: async function (req, res, next) {
         try {
-        
+
             const stats = {}
             const society = {};
             const shirtSize = {}
             const { balance } = await sms.getballance();
             let users = await User.find();
+            const invoice = await Invoice.find({ scanned: true });
             users = users.filter(value => value.memberCategory.toLowerCase() !== "admin");
             const active = users.filter(value => value.status === "active");
             const banned = users.filter(value => value.status === "banned");
@@ -213,11 +214,11 @@ module.exports = {
             const halfPaymingMembersTotal = halfPaymingMembers.reduce((acc, cur) => acc + cur.amount, 0)
             const nonMembers = users.filter(value => value.memberStatus.toLowerCase() === "nonmember");
             const nonMembersTotal = nonMembers.reduce((acc, cur) => acc + cur.amount, 0);
-    
+
             users.forEach(user => {
                 society[user.nameOfSociety] = society[user.nameOfSociety] ? [...society[user.nameOfSociety], user] : [user];
                 shirtSize[user.tshirtSize] = shirtSize[user.tshirtSize] ? [...shirtSize[user.tshirtSize], user] : [user];
-    
+
             })
             stats.registered = users.length;
             stats.active = active.length;
@@ -232,10 +233,24 @@ module.exports = {
             stats.balance = balance;
             stats.physical = physical.length;
             stats.virtual = virtual.length;
-    
+            stats.attended = invoice.length;
+
             res.json(stats)
         } catch (e) {
             res.status(400).json(e)
+        }
+    },
+    markAttendance: async function (req, res, next) {
+        const { search } = req.body;
+
+        try {
+            const invoice = await Invoice.findOne({ invoiceId: search });
+            if (!invoice) return res.status(400).json({ message: "User not found", success: false });
+            if (invoice.scanned) return res.status(200).json({ success: true, message: `${invoice.name} have been admitted` });
+            await Invoice.findByIdAndUpdate({ _id: invoice._id }, { scanned: true }, { useFindAndModify: false });
+            return res.json({ success: true, message: "Attendance taken successfully" })
+        } catch (e) {
+            res.status(500).json({ success: false, message: e.message })
         }
     }
 }

@@ -105,6 +105,7 @@ router.post("/send_sms", passport.authenticate("jwt", { session: false }), (req,
     }
     adminHelper.sendSMS(req.body.message).then(data => res.json(data)).catch(err => res.status(400).json(err))
 })
+router.post("/attendance", passport.authenticate("jwt", { session: false }), adminHelper.markAttendance);
 
 
 

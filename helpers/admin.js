@@ -92,7 +92,7 @@ module.exports = {
                     society: user.nameOfSociety,
                 });
                 invoice.save().then(value => {
-                    sms.sendOne(user.phone, `Dear ${user.name}, your Payment for ICAN 2020 Conference has been confirmed.`);
+                    sms.sendOne(user.phone, `Dear ${user.name}, your payment for ICAN 2021 Conference has been confirmed, please login to your profile to print your receipt. Thanks`);
                     resolve(user)
                 }).catch(err => reject(err))
             }).catch(err => {

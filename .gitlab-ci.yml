@@ -1,0 +1,36 @@
+before_script:
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY"
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+
+stages:
+  - deploy
+  - deploystaging
+
+variables:
+  APP_NAME: ezd
+
+deploy:
+  image: ilyasemenov/gitlab-ci-git-push
+  stage: deploy
+  environment:
+    name: production
+    # url: https://api.founderslair.com/
+  only:
+    - master
+  script:
+    - git-push dokku@142.93.253.13:$APP_NAME
+
+# deploystaging:
+#   stage: deploystaging
+#   image: ruby:latest
+#   script:
+#     - apt-get update -qy
+#     - apt-get install -y ruby-dev
+#     - gem install dpl
+#     - dpl --provider=heroku --app=flair-back-end --api-key=$HEROKU_API_KEY # security add the heroku api to CI/CD setting
+#   only:
+#     - development

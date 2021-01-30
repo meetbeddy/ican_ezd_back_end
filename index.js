@@ -25,5 +25,5 @@ app.use("/api/attendant", userRoute);
 app.use("/api", api);
 const port = process.env.PORT || 4000;
 // mongoose.set('useCreateIndex', true)
-// mongoose.connect(process.env.MONGODBURI, { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 app.listen(port, () => console.log("App Running on Port " + port));

@@ -4,7 +4,7 @@ const moment = require("moment");
 
 const connect = async () => {
     mongoose.set('useCreateIndex', true)
-    await mongoose.connect(process.env.MONGODBURI, { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
     User.findOne({ email: "admin@admin.com" }).then(async user => {
         if (!user) {
             try {

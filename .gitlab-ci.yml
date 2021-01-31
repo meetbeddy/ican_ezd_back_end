@@ -12,6 +12,7 @@ stages:
 
 variables:
   APP_NAME: ezd
+  SERVER_IP: 68.183.102.30
 
 deploy:
   image: ilyasemenov/gitlab-ci-git-push
@@ -22,7 +23,7 @@ deploy:
   only:
     - master
   script:
-    - git-push dokku@142.93.253.13:$APP_NAME
+    - git-push dokku@$SERVER_IP:$APP_NAME
 
 # deploystaging:
 #   stage: deploystaging

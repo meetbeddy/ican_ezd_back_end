@@ -11,7 +11,7 @@ stages:
   - deploystaging
 
 variables:
-  APP_NAME: ezd
+  APP_NAME: tests
   SERVER_IP: 68.183.102.30
 
 deploy:

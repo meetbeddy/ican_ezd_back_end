@@ -34,7 +34,7 @@ module.exports = {
                 }
                 next()
             }
-            if(result.page){
+            if(req.query.page){
                 const result = {}
                 result.page = parseInt(req.query.page) || 1;
                 result.count = await await model.countDocuments(query);

@@ -220,16 +220,16 @@ module.exports = {
             const { balance } = await sms.getballance();
             let users = await User.find();
             const invoice = await Invoice.find({ scanned: true });
-            users = users.filter(value => value.memberCategory.toLowerCase() !== "admin");
+            users = users.filter(value => value.memberCategory && value.memberCategory.toLowerCase() !== "admin");
             const active = users.filter(value => value.status === "active");
             const banned = users.filter(value => value.status === "banned");
-            const physical = users.filter(value => value.venue === "physical");
-            const virtual = users.filter(value => value.venue === "virtual");
+            const physical = users.filter(value => value.venue.toLowerCase() === "physical");
+            const virtual = users.filter(value => value.venue.toLowerCase() === "virtual");
             const confirmed = users.filter(value => value.confirmedPayment);
             const unConfirmed = users.filter(value => !value.confirmedPayment);
-            const fullPaymingMembers = confirmed.filter(value => value.memberCategory.toLowerCase().includes("full-paying member") && value.memberStatus.toLowerCase() === "member");
+            const fullPaymingMembers = confirmed.filter(value => (value.memberCategory.toLowerCase().includes("full-paying member") || value.memberCategory.toLowerCase().includes("full paying")) && value.memberStatus.toLowerCase() === "member");
             const fullPaymingMembersTotal = fullPaymingMembers.reduce((acc, cur) => acc + cur.amount, 0);
-            const halfPaymingMembers = confirmed.filter(value => value.memberCategory.toLowerCase().includes("half-paying member") && value.memberStatus.toLowerCase() === "member");
+            const halfPaymingMembers = confirmed.filter(value => (value.memberCategory.toLowerCase().includes("half-paying member") || value.memberCategory.toLowerCase().includes("half paying")) && value.memberStatus.toLowerCase() === "member");
             const halfPaymingMembersTotal = halfPaymingMembers.reduce((acc, cur) => acc + cur.amount, 0)
             const nonMembers = users.filter(value => value.memberStatus.toLowerCase() === "nonmember");
             const nonMembersTotal = nonMembers.reduce((acc, cur) => acc + cur.amount, 0);
@@ -256,6 +256,7 @@ module.exports = {
 
             res.json(stats)
         } catch (e) {
+            console.log("🚀 ~ file: admin.js ~ line 260 ~ e", e)
             res.status(400).json(e)
         }
     },

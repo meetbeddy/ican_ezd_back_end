@@ -34,11 +34,23 @@ module.exports = {
                 }
                 next()
             }
+            if(result.page){
+                const result = {}
+                result.page = parseInt(req.query.page) || 1;
+                result.count = await await model.countDocuments(query);
+                try {
+                    result.data = await model.find(query, data).limit(parseInt(req.query.size || 10)).skip(((parseInt(req.query.page) || 1) - 1) * (parseInt(req.query.size) || 10)).exec();
+                    req.result = result
+                    next()
+                } catch (e) {
+                    res.status(400).json({ message: e.message })
+                }
+                next()
+            }
             const result = {}
-            result.page = parseInt(req.query.page) || 1;
             result.count = await await model.countDocuments(query);
             try {
-                result.data = await model.find(query, data).limit(parseInt(req.query.size || 10)).skip(((parseInt(req.query.page) || 1) - 1) * (parseInt(req.query.size) || 10)).exec();
+                result.data = await model.find(query, data);
                 req.result = result
                 next()
             } catch (e) {

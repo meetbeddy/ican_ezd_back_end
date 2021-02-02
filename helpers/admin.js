@@ -34,7 +34,7 @@ module.exports = {
                 }
                 next()
             }
-            if(req.query.page){
+            if (req.query.page) {
                 const result = {}
                 result.page = parseInt(req.query.page) || 1;
                 result.count = await await model.countDocuments(query);
@@ -130,9 +130,10 @@ module.exports = {
         })
     },
     uploadUsers: function (data) {
+        // console.log("🚀 ~ file: admin.js ~ line 133 ~ data", data)
         return new Promise((resolve, reject) => {
             let users = data.map(value => {
-                if (value.confirmedPayment.toLowerCase() === "true") {
+                if (value.confirmedPayment) {
                     value.confirmedPayment = true
                 } else {
                     value.confirmedPayment = false
@@ -142,9 +143,15 @@ module.exports = {
                 return value
             });
             User.create(users).then(users => {
-                // SEND Email and SMS
+                users.forEach(user => {
+                        sms.sendOne(user.phone, `Dear ${user.name}, You Have Successfully Registered for the 2021 ICAN Eastern Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `);
+                        mail.sendMail(user.email, "SUCCESSFULL REGISTRATION", email.register(user.name, user.email, user.password));
+                });
                 resolve(users)
-            }).catch(err => reject(err))
+            }).catch(err => {
+                console.log("err", err)
+                reject(err)
+            })
         })
     },
     getUsersReceipts: function () {

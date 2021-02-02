@@ -20,7 +20,7 @@ const userSchema = mongooseSchema({
     tellerDate: { type: Date, required: true },
     name: { type: String, trim: true, required: true },
     phone: { type: String, trim: true, required: true },
-    gender: { type: String, trim: true, required: true },
+    gender: { type: String, trim: true, required: false },
     tshirtSize: { type: String, trim: true, required: true },
     memberStatus: { type: String, trim: true, required: true },
     amount: {

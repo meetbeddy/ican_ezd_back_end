@@ -48,7 +48,6 @@ module.exports = {
                 mg.messages().sendMime(dataToSend, (error, body) => {
                     if (error) reject(error);
                     resolve(body)
-                    console.log("success")
                 });
             });
         })

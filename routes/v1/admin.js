@@ -96,7 +96,9 @@ router.post("/send_certificates", passport.authenticate("jwt", { session: false 
     if (req.user.role[0].name.toLowerCase() !== "admin") {
         return res.status(401).json({ message: "unauthorized" });
     }
-    adminHelper.sendCertificate().then(data => res.json(data)).catch(err => res.status(400).json(err))
+    adminHelper.sendCertificate().then(data => res.json(data)).catch(err => {
+        console.log(err)
+        res.status(500).json(err)})
 })
 
 router.post("/send_sms", passport.authenticate("jwt", { session: false }), (req, res) => {

@@ -8,7 +8,6 @@ const passport = require("passport");
 router.get("/all", 
 passport.authenticate("jwt", {session: false }), 
 (req, res) => {
-    console.log("HEY")
 
     Jimp.read("../../certs/cert.jpg").then(function(image) {
         cert = image;

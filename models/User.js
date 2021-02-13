@@ -27,7 +27,6 @@ const userSchema = mongooseSchema({
         type: Number, trim: true, default: function () {
             const memberStatus = this.memberStatus ? this.memberStatus.toLowerCase() : "";
             if (memberStatus === "nonmember") return 35000;
-            console.log(this.memberCategory)
             const memberCategory = this.memberCategory ? this.memberCategory.toLowerCase() : "";
             if (memberCategory === "half-paying member") return 15000;
             if (memberCategory === "full-paying member") return 30000;

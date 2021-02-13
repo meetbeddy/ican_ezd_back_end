@@ -1,64 +1,61 @@
-const User = require("../models/User");
 const Jimp = require("jimp");
 const dot = require("dotenv");
 const db = require("../config/db_connection");
+const mailgun = require("../helpers/mailgun")
 
 dot.config();
 db();
-// const user = {
-//     name: "Arinze Ogbonna Ugabla",
-//     memberAcronym: "ACA",
-// }
-const genReceipt = async () => {
-    try {
-        console.log("I got here")
-        const users = (await User.find({ confirmedPayment: true })).map(user => {
-            const surname = user.name.split(" ")[0] ? user.name.split(" ")[0].toUpperCase() : "";
-            const firstName = user.name.split(" ")[1] ? user.name.split(" ")[1] : "";
-            const otherName = user.name.split(" ")[2] ? user.name.split(" ")[2] : "";
-            const memberAcronym = user.memberAcronym.toUpperCase()
-            return `${surname} ${firstName} ${otherName}, ${memberAcronym}`;
-        })
-        
-        console.log("🚀 ~ file: sendCert.js ~ line 19 ~ users ~ users", users)
-    //     const value = await Jimp.read("cert.jpg");
-    //     const font = await Jimp.loadFont(Jimp.FONT_SANS_128_BLACK);
-    //     let surname = user.name.split(" ")[0] ? user.name.split(" ")[0].toUpperCase() : "";
-    //     let firstName = user.name.split(" ")[1] ? user.name.split(" ")[1] : "";
-    //     let otherName = user.name.split(" ")[2] ? user.name.split(" ")[2] : "";
-    //     let memberAcronym = user.memberAcronym.toUpperCase();
-    //     value.print(font, 1560, 1650, {
-    //         text: `${surname} ${firstName} ${otherName}, ${memberAcronym}`,
-    //         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
-    //         alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
-    //     }, 2000, 900)
-    //         .write(`certs/${user.name}.png`);
-    } catch (e) {
-        console.log("🚀 ~ file: sendCert.js ~ line 32 ~ genReceipt ~ e", e);
+const setUp = async () => {
+    const cert = await Jimp.read("cert.jpg");
+    const origImageDim = { width: cert.bitmap.width, height: cert.bitmap.height };
+    cert.resize((origImageDim.width * 10 / 100), (origImageDim.height * 10 / 100)) // resize
+        .quality(70)
+    const font = await Jimp.loadFont(Jimp.FONT_SANS_16_BLACK);
+    return {
+        cert,
+        font
     }
 }
+const nameFormatter = (name, memberAcronym) => {
+    if (!name || !memberAcronym) return "";
+    const surname = name.split(" ")[0] ? name.split(" ")[0].toUpperCase() : "";
+    const firstName = name.split(" ")[1] ? name.split(" ")[1] : "";
+    const otherName = name.split(" ")[2] ? name.split(" ")[2] : "";
+    const acronym = memberAcronym.toUpperCase()
+    return `${surname} ${firstName} ${otherName}, ${acronym}`
+}
+const printCert = async ({ cert, font, name, email, mail }) => {
+    cert.print(font, 130, 105, {
+        text: name,
+        alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+        alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+    }, 300, 202)
+    // .write(`certs/${name}.png`);
+    if (mail) {
+      return cert.getBase64(Jimp.MIME_PNG, function (err, data) {
+            return mailgun.sendCert(email, data, "ICAN CERTIFICATE OF PARTICIPATION", name)
+        });
+    }
+    return cert;
 
-genReceipt();
-// Jimp.read("cert.jpg").then(function (image) {
-//     cert = image;
-//     return Jimp.loadFont(Jimp.FONT_SANS_128_BLACK);
-// }).then(function (font) {
-//     let surname = user.name.split(" ")[0] ? user.name.split(" ")[0].toUpperCase() : "";
-//     let firstName = user.name.split(" ")[1] ? user.name.split(" ")[1] : "";
-//     let otherName = user.name.split(" ")[2] ? user.name.split(" ")[2] : "";
-//     let memberAcronym = user.memberAcronym.toUpperCase();
-//     cert.print(font, 1560, 1650, {
-//         text: `${surname} ${firstName} ${otherName}, ${memberAcronym}`,
-//         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
-//         alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
-//     }, 2000, 900)
-//     .write(`certs/${user.name}.png`);
-//     console.log("Helo")
-//     // cert.getBase64(Jimp.MIME_PNG, function (err, data) {
-//     //     mail.sendCert(user.email, data, "ICAN CERTIFICATE OF PARTICIPATION", user.name).then(success => {
-//     //         console.log("success")
-//     //     }).catch(err => console.log(err))
-//     // });
-// }).catch(function (err) {
-//     console.log(err)
-// });
+}
+module.exports = {
+    sendAfterConfirmed: async ({ email, name, memberAcronym }) => {
+        const userName = nameFormatter(name, memberAcronym);
+        const { cert, font } = await setUp();
+        return await printCert({ cert, font, name: userName, email, mail: true });
+    },
+    sendToProfile: async ({ name, memberAcronym }, cb) => {
+        const userName = nameFormatter(name, memberAcronym);
+        const { cert, font } = await setUp();
+        cert.print(font, 130, 105, {
+            text: userName,
+            alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+            alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+        }, 300, 202)
+
+        cert.getBase64(Jimp.MIME_PNG, function (err, data) {
+            cb(data);
+        });
+    },
+}

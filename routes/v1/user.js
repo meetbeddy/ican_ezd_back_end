@@ -18,11 +18,9 @@ router.get("/certificate",
   (req, res) => {
     userHelper.getCertificate(req.user).then(data => {
       res.json(data);
-      // mail.sendCert("arinzeogbo@gmail.com", data, "ICAN CERTIFICATE OF PARTICIPATION", req.user.name).then(success => {
-      //   console.log("success")
-    // }).catch(err => console.log(err))
     }).catch(err => {
-      res.status(400).json(err)
+    console.log("🚀 ~ file: user.js ~ line 22 ~ userHelper.getCertificate ~ err", err)
+      res.status(s00).json(err)
     })
     
 

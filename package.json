@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "start:dev": "nodemon index.js",
-    "send:cert": "nodemon helpers/sendCert.js"
+    "send:cert": "nodemon jobs/sendCert.js"
   },
   "author": "",
   "license": "ISC",

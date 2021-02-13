@@ -2,11 +2,12 @@ const User = require("../models/User");
 const Invoice = require("../models/Invoice");
 const Settings = require("../models/Settings");
 const sms = require("./sms");
-const email = require("./email.template");
+// const email = require("./email.template");
 const mail = require("./mailgun");
 const Jimp = require("jimp");
 const escapeRegex = require("./searchRegex")
 const moment = require("moment");
+const cert = require("./sendCert");
 
 
 module.exports = {
@@ -19,7 +20,7 @@ module.exports = {
             if (req.user.role[0].name.toLowerCase() !== "admin") {
                 return res.status(401).json({ message: "unauthorized" });
             }
-            if (req.query.search) {
+            if (req.query.search && req.query.search.trim()) {
                 regex = new RegExp(escapeRegex(req.query.search), 'gi');
                 const result = {}
                 query.name = regex;
@@ -30,9 +31,9 @@ module.exports = {
                     req.result = result
                     next()
                 } catch (e) {
-                    res.status(400).json({ message: e.message })
+                    return res.status(400).json({ message: e.message })
                 }
-                next()
+               return next()
             }
             if (req.query.page) {
                 const result = {}
@@ -41,22 +42,20 @@ module.exports = {
                 try {
                     result.data = await model.find(query, data).limit(parseInt(req.query.size || 10)).skip(((parseInt(req.query.page) || 1) - 1) * (parseInt(req.query.size) || 10)).exec();
                     req.result = result
-                    next()
+                   return next()
                 } catch (e) {
-                    res.status(400).json({ message: e.message })
+                    return res.status(400).json({ message: e.message })
                 }
-                next()
             }
             const result = {}
             result.count = await await model.countDocuments(query);
             try {
                 result.data = await model.find(query, data);
                 req.result = result
-                next()
+                return next()
             } catch (e) {
-                res.status(400).json({ message: e.message })
+                return res.status(400).json({ message: e.message })
             }
-            next()
         }
     },
     getAllUsers: function () {
@@ -103,12 +102,12 @@ module.exports = {
                     shirtSize: user.tshirtSize,
                     society: user.nameOfSociety,
                 });
-                invoice.save().then(value => {
+                invoice.save().then(async (value) => {
                     sms.sendOne(user.phone, `Dear ${user.name}, your payment for ICAN 2021 Conference has been confirmed, please login to your profile to print your receipt. Thanks`);
+                    await cert.sendAfterConfirmed(user)
                     resolve(user)
                 }).catch(err => reject(err))
             }).catch(err => {
-                console.log(err)
                 reject(err)
             })
         })
@@ -152,7 +151,6 @@ if(typeof value.confirmedPayment === "boolean") {
                 });
                 resolve(users)
             }).catch(err => {
-                console.log("err", err)
                 reject(err)
             })
         })
@@ -170,39 +168,16 @@ if(typeof value.confirmedPayment === "boolean") {
         })
     },
     sendCertificate: async function () {
-        let setting = await Setting.findOne().then(data => data).catch(err => err);
+        let setting = await Setting.findOne({});
         let users = await this.getAllUsers();
         users = users.filter(user => user.confirmedPayment);
         
         return new Promise((resolve, reject) => {
-            if (!setting.certificate) {
+            if ((setting && !setting.certificate) || !setting) {
                 resolve("PLEASE CLICK THE \'START CERTIFICATE DISTRIBUTION\' BUTTON TO SET CERTIFICATE TRUE")
             }
-            users.map(user => {
-                let cert;
-                Jimp.read("cert.jpg").then(function (image) {
-                    cert = image;
-                    return Jimp.loadFont(Jimp.FONT_SANS_128_BLACK);
-                }).then(function (font) {
-                    let surname = user.name.split(" ")[0] ? user.name.split(" ")[0].toUpperCase() : "";
-                    let firstName = user.name.split(" ")[1] ? user.name.split(" ")[1] : "";
-                    let otherName = user.name.split(" ")[2] ? user.name.split(" ")[2] : "";
-                    let memberAcronym = user.memberAcronym.toUpperCase();
-                    cert.print(font, 1500, 1650, {
-                        text: `${surname} ${firstName} ${otherName}, ${memberAcronym}`,
-                        alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
-                        alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
-                    }, 2000, 900)
-                    // .write(`certs/${user.name}.png`);
-                    // console.log("Helo")
-                    cert.getBase64(Jimp.MIME_PNG, function (err, data) {
-                        mail.sendCert(user.email, data, "ICAN CERTIFICATE OF PARTICIPATION", user.name).then(success => {
-                            console.log("success")
-                        }).catch(err => console.log(err))
-                    });
-                }).catch(function (err) {
-                    reject(err)
-                });
+            users.forEach(user => {
+                cert.sendAfterConfirmed(user)
             });
             resolve(users)
         })
@@ -236,7 +211,6 @@ if(typeof value.confirmedPayment === "boolean") {
             const halfPaymingMembers = confirmed.filter(value => (value.memberCategory.toLowerCase().includes("half-paying member") || value.memberCategory.toLowerCase().includes("half paying")) && value.memberStatus.toLowerCase() === "member");
             const halfPaymingMembersTotal = halfPaymingMembers.reduce((acc, cur) => acc + cur.amount, 0);
             const nonMembers = await User.find({memberStatus: "nonmember"});
-		console.log(nonMembers);
             const nonMembersTotal = nonMembers.reduce((acc, cur) => acc + cur.amount, 0);
 
             users.forEach(user => {
@@ -261,7 +235,6 @@ if(typeof value.confirmedPayment === "boolean") {
 
             res.json(stats)
         } catch (e) {
-            console.log("🚀 ~ file: admin.js ~ line 260 ~ e", e)
             res.status(400).json(e)
         }
     },

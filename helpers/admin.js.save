@@ -133,14 +133,15 @@ module.exports = {
         // console.log("🚀 ~ file: admin.js ~ line 133 ~ data", data)
         return new Promise((resolve, reject) => {
             let users = data.map(value => {
-if(typeof value.confirmedPayment === "string"){
-    if(value.confirmedPayment.toLowerCase() === "true") value.confirmedPayment = true
-    else { value.confirmedPayment = false}
-}
-
-if(typeof value.confirmedPayment === "boolean") {
-    value.confirmedPayment = value.confirmedPayment ? true : false
-}
+                if(typeof value.confirmedPayment === "string") {
+		 if(value.confirmedPayment.toLowerCase() === "true") value.confirmedPayment = true
+		 else {value.confirmedPayment = false }
+		}
+                if (typeof value.confirmedPayment === boolean) {
+                    value.confirmedPayment = true
+                } else {
+                    value.confirmedPayment = false
+                }
                 value.tellerDate = moment().format()
                 value.role = [{ name: value.role }]
                 return value

@@ -144,8 +144,8 @@ module.exports = {
             });
             User.create(users).then(users => {
                 users.forEach(user => {
-                        sms.sendOne(user.phone, `Dear ${user.name}, You Have Successfully Registered for the 2021 ICAN Eastern Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `);
-                        mail.sendMail(user.email, "SUCCESSFULL REGISTRATION", email.register(user.name, user.email, user.password));
+                        // sms.sendOne(user.phone, `Dear ${user.name}, You Have Successfully Registered for the 2021 ICAN Eastern Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `);
+                        // mail.sendMail(user.email, "SUCCESSFULL REGISTRATION", email.register(user.name, user.email, user.password));
                 });
                 resolve(users)
             }).catch(err => {
@@ -170,6 +170,7 @@ module.exports = {
         let setting = await Setting.findOne().then(data => data).catch(err => err);
         let users = await this.getAllUsers();
         users = users.filter(user => user.confirmedPayment);
+        
         return new Promise((resolve, reject) => {
             if (!setting.certificate) {
                 resolve("PLEASE CLICK THE \'START CERTIFICATE DISTRIBUTION\' BUTTON TO SET CERTIFICATE TRUE")
@@ -178,19 +179,19 @@ module.exports = {
                 let cert;
                 Jimp.read("cert.jpg").then(function (image) {
                     cert = image;
-                    return Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+                    return Jimp.loadFont(Jimp.FONT_SANS_128_BLACK);
                 }).then(function (font) {
                     let surname = user.name.split(" ")[0] ? user.name.split(" ")[0].toUpperCase() : "";
                     let firstName = user.name.split(" ")[1] ? user.name.split(" ")[1] : "";
                     let otherName = user.name.split(" ")[2] ? user.name.split(" ")[2] : "";
                     let memberAcronym = user.memberAcronym.toUpperCase();
-                    cert.print(font, 5, -62, {
+                    cert.print(font, 1500, 1650, {
                         text: `${surname} ${firstName} ${otherName}, ${memberAcronym}`,
                         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
                         alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
-                    }, 775, 775)
+                    }, 2000, 900)
                     // .write(`certs/${user.name}.png`);
-
+                    // console.log("Helo")
                     cert.getBase64(Jimp.MIME_PNG, function (err, data) {
                         mail.sendCert(user.email, data, "ICAN CERTIFICATE OF PARTICIPATION", user.name).then(success => {
                             console.log("success")

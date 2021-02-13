@@ -25,9 +25,10 @@ const userSchema = mongooseSchema({
     memberStatus: { type: String, trim: true, required: true },
     amount: {
         type: Number, trim: true, default: function () {
-            const memberStatus = this.memberStatus.toLowerCase();
-            if(memberStatus === "nonmember") return 35000;
-            const memberCategory = this.memberCategory.toLowerCase();
+            const memberStatus = this.memberStatus ? this.memberStatus.toLowerCase() : "";
+            if (memberStatus === "nonmember") return 35000;
+            console.log(this.memberCategory)
+            const memberCategory = this.memberCategory ? this.memberCategory.toLowerCase() : "";
             if (memberCategory === "half-paying member") return 15000;
             if (memberCategory === "full-paying member") return 30000;
             if (memberCategory === "admin" || memberCategory === "planning") return 0;
@@ -59,7 +60,7 @@ const userSchema = mongooseSchema({
             return this.memberStatus.toLowerCase() === "member";
         }
     },
-    venue: { type: String, trimm: true, required: true}
+    venue: { type: String, trimm: true, required: true }
 
 }, { timestamps: true });
 

@@ -15,7 +15,8 @@ const api = require("./routes/v1/angels");
 dotenv.config();
 const app = express();
 connect_db();
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb"}));
+// app.use(express.bodyParser({limit: '50mb'}));
 app.use(passport.initialize());
 require("./config/passport")(passport);
 app.use(cors())

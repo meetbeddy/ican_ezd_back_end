@@ -1,5 +1,5 @@
 module.exports = {
-    header: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  header: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html>
     
     <head>
@@ -19,8 +19,8 @@ module.exports = {
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i" rel="stylesheet">
         <!--<![endif]-->
     </head>`,
-    register: function (name, email, password) {
-        return `
+  register: function (name, email, password) {
+    return `
     ${this.header}
 
 <body>
@@ -55,7 +55,7 @@ module.exports = {
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td class="esd-block-text es-p10t es-p20r es-p20l" bgcolor="#fcfcfc" align="left">
-                                                                                        <p>Hi ${name}, you have successfully registered for the up comming ICAN Eastern Conference slated for Wednesday 3rd - Thursday 4th February, 2021. The Conference Will Now Hold Virtually and Physically.</p>
+                                                                                        <p>Hi ${name}, you have successfully registered for the up comming ICAN Eastern Conference slated for Tuesday 5th - Friday 8th April, 2022. The Conference Will Now Hold Virtually and Physically.</p>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -286,10 +286,10 @@ module.exports = {
     </div>
 </body>
 
-</html>`
-    },
-    sendCert: function (name) {
-        return `${this.header}
+</html>`;
+  },
+  sendCert: function (name) {
+    return `${this.header}
         <body>
         <div class="es-wrapper-color">
             <!--[if gte mso 9]>
@@ -456,7 +456,6 @@ module.exports = {
             </table>
         </div>
     </body>
-        `
-    }
-}
-
+        `;
+  },
+};

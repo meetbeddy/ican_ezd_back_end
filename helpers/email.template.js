@@ -226,12 +226,12 @@ module.exports = {
                                                                     <tbody>
                                                                         <tr>
                                                                             <td esdev-links-color="#999999" class="esd-block-text" align="center">
-                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2021.</p>
+                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2022.</p>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td esdev-links-color="#999999" class="esd-block-text es-p5b" align="center">
-                                                                                <p style="color: #ffffff;">Wednesday 7th - Thursday 8th October, 2020, Virtually</p>
+                                                                                <p style="color: #ffffff;">Tuesday 5th - Friday 8th April, 2022, Virtually</p>
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>
@@ -346,7 +346,7 @@ module.exports = {
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td class="esd-block-text es-m-txt-c es-p10t es-p10b" align="left">
-                                                                                            <p style="line-height: 150%;">Thank you for attending the 2021 ICAN Eastern ZONAL CONFERENCE.</p>
+                                                                                            <p style="line-height: 150%;">Thank you for attending the 2022 ICAN Eastern ZONAL CONFERENCE.</p>
                                                                                             <p style="color: red; font-style: italic;text-align: center;">
                                                                                               Click Download to Download the IMAGE
                                                                                             </p>

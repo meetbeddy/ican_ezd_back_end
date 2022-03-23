@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const mongooseSchema = mongoose.Schema;
 
-
-const InvoiceSchema = mongooseSchema({
+const InvoiceSchema = mongooseSchema(
+  {
     user: { type: mongoose.ObjectId, ref: "user" },
     amount: { type: String, required: true },
     name: { type: String, required: true },
@@ -13,7 +13,9 @@ const InvoiceSchema = mongooseSchema({
     invoiceId: { type: String, required: true },
     society: { type: String, required: false },
     scanned: { type: Boolean, default: false },
-}, { timestamps: true });
+    code: { type: String },
+  },
+  { timestamps: true }
+);
 
 module.exports = Invoice = mongoose.model("invoice", InvoiceSchema);
-

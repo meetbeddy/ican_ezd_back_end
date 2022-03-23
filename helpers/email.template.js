@@ -55,7 +55,7 @@ module.exports = {
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td class="esd-block-text es-p10t es-p20r es-p20l" bgcolor="#fcfcfc" align="left">
-                                                                                        <p>Hi ${name}, you have successfully registered for the up comming ICAN Eastern Conference slated for Tuesday 5th - Friday 8th April, 2022. The Conference Will Now Hold Virtually and Physically.</p>
+                                                                                        <p>Hi ${name}, you have successfully registered for the upcoming ICAN Eastern Conference slated for Tuesday 5th - Friday 8th April, 2022. The Conference Will Now Hold Virtually and Physically.</p>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -263,7 +263,7 @@ module.exports = {
                                                                         <table width="100%" cellspacing="0" cellpadding="0">
                                                                             <tbody>
                                                                                 <tr>
-                                                                                    <td class="esd-block-image es-infoblock made_with" align="center"><a target="_blank" href="https://www.icanezdconference.org.ng/"><img src="https://i.ibb.co/WFrJD28/logo.png" alt style="display: block; width: 115px; height: 143px;" height="143"></a></td>
+                                                                                    <td class="esd-block-image es-infoblock made_with" align="center"><a target="_blank" href="https://www.icanezdconference.org.ng/"><img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt style="display: block; width: 115px; height: 143px;" height="143"></a></td>
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>

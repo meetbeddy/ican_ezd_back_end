@@ -370,10 +370,9 @@ module.exports = {
           .status(400)
           .json({ message: "User not found", success: false });
       if (invoice.scanned)
-        return res.status(200).json({
-          success: true,
-          message: `${invoice.name} have been admitted`,
-        });
+        return res
+          .status(400)
+          .json({ message: "Attendance already taken", success: false });
       await Invoice.findByIdAndUpdate(
         { _id: invoice._id },
         { scanned: true },

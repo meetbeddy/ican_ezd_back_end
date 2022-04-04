@@ -119,7 +119,6 @@ module.exports = {
         { useFindAndModify: false }
       )
         .then((user) => {
-          console.log(user);
           if (!user) {
             reject({ message: "No User Found" });
             return;
@@ -248,6 +247,10 @@ module.exports = {
     let setting = await Setting.findOne({});
     let users = await this.getAllUsers();
     users = users.filter((user) => user.confirmedPayment);
+
+    // let users = [];
+    // let obed = await User.find({ email: "meetbeddy@gmail.com" });
+    // users = obed.filter((user) => user.confirmedPayment);
 
     return new Promise((resolve, reject) => {
       if ((setting && !setting.certificate) || !setting) {

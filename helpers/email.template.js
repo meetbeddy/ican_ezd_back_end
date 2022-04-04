@@ -434,7 +434,7 @@ module.exports = {
                                                                             <table cellpadding="0" cellspacing="0" width="100%">
                                                                                 <tbody>
                                                                                     <tr>
-                                                                                        <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank" href="https://www.icanezdconference.org.ng/"><img class="adapt-img" src="https://i.ibb.co/WFrJD28/logo.png" alt style="display: block;" width="72"></a></td>
+                                                                                        <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank" href="https://www.icanezdconference.org.ng/"><img class="adapt-img" src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt style="display: block;" width="72"></a></td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>

@@ -13,8 +13,8 @@ const env = require("dotenv");
 env.config();
 
 const app = express();
-// connect_db();
-app.use(bodyParser.json({ limit: "50mb" }));
+connect_db();
+app.use(bodyParser.json({ limit: "100mb" }));
 // app.use(express.bodyParser({limit: '50mb'}));
 app.use(passport.initialize());
 require("./config/passport")(passport);
@@ -26,13 +26,13 @@ app.use("/api", api);
 const port = process.env.PORT || 5000;
 // mongoose.set('useCreateIndex', true)
 //database connect
-const db = process.env.DB_URI;
+// const db = process.env.MONGO_URL;
 
-mongoose
-  .connect(db, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-  })
-  .then(() => console.log("db connected"))
-  .catch((err) => console.log(err));
+// mongoose
+//   .connect(db, {
+//     useUnifiedTopology: true,
+//     useNewUrlParser: true,
+//   })
+//   .then(() => console.log("db connected"))
+//   .catch((err) => console.log(err));
 app.listen(port, () => console.log("App Running on Port " + port));

@@ -1,13 +1,11 @@
 const mongoose = require("mongoose");
 const User = require("../models/User");
 const moment = require("moment");
-const env = require("dotenv");
-env.config();
 
 const connect = async () => {
   try {
     mongoose.set("useCreateIndex", true);
-    await mongoose.connect(process.env.DB_URI, {
+    await mongoose.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

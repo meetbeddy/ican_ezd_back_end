@@ -32,9 +32,17 @@ const userSchema = mongooseSchema(
     name: { type: String, trim: true, required: true },
     phone: { type: String, trim: true, required: true },
     gender: { type: String, trim: true, required: false },
-    tshirtSize: { type: String, trim: true, required: true },
+    tshirtSize: {
+      type: String,
+      trim: true,
+      required: true,
+      default: function () {
+        const venue = this.venue ? this.venue.toLowerCase() : "";
+        if (venue === "virtual") return "NA";
+        return this.tshirtSize;
+      },
+    },
     memberStatus: { type: String, trim: true, required: true },
-    venue: { type: String, trim: true, required: true },
     amount: {
       type: Number,
       trim: true,
@@ -96,6 +104,7 @@ const userSchema = mongooseSchema(
         return this.memberStatus.toLowerCase() === "member";
       },
     },
+    venue: { type: String, trim: true, required: true },
   },
   { timestamps: true }
 );
@@ -108,7 +117,7 @@ userSchema.pre("save", function (next) {
       if (err) return next(err);
       sms.sendOne(
         user.phone,
-        `Dear ${user.name}, You Have Successfully Registered for the 2022 ICAN Eastern Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `
+        `Dear ${user.name}, You Have Successfully Registered for the 2022 ICAN Ican Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `
       );
       mail.sendMail(
         user.email,

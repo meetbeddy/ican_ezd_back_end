@@ -458,4 +458,274 @@ module.exports = {
     </body>
         `;
   },
+
+  forgotpassword: function (name, email, link) {
+    return `
+    ${this.header}
+
+<body>
+    <div class="es-wrapper-color">
+        <!--[if gte mso 9]>
+			<v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
+				<v:fill type="tile" color="#ffffff"></v:fill>
+			</v:background>
+		<![endif]-->
+        <table class="es-wrapper" style="background-position: center top;" width="100%" cellspacing="0" cellpadding="0">
+            <tbody>
+                <tr>
+                    <td class="esd-email-paddings" valign="top">
+                        <table class="es-content esd-header-popover" cellspacing="0" cellpadding="0" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table class="es-content-body" style="background-color: transparent;" width="600" cellspacing="0" cellpadding="0" align="center">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="esd-structure" align="left">
+                                                        <table width="100%" cellspacing="0" cellpadding="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="esd-container-frame" width="600" valign="top" align="center">
+                                                                        <table style="border-radius: 3px; border-collapse: separate; background-color: #fcfcfc;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#fcfcfc">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="esd-block-text es-m-txt-l es-p30t es-p20r es-p20l" align="left">
+                                                                                        <h2 style="color: #333333;">Welcome!</h2>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="esd-block-text es-p10t es-p20r es-p20l" bgcolor="#fcfcfc" align="left">
+                                                                                        <p>Hi ${name}, you requested a password reset</p>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="esd-structure es-p30t es-p20r es-p20l" style="background-color: #fcfcfc;" esd-custom-block-id="15791" bgcolor="#fcfcfc" align="left">
+                                                        <table width="100%" cellspacing="0" cellpadding="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="esd-container-frame" width="560" valign="top" align="center">
+                                                                        <table style="border-color: #efefef; border-style: solid; border-width: 1px; border-radius: 3px; border-collapse: separate; background-color: #ffffff;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="esd-block-text es-p20t es-p15b" align="center">
+                                                                                        <h3 style="color: #333333;">click the button below to reset your password</h3>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="esd-block-text" align="center">
+                                                                                        <p style="color: #64434a; font-size: 16px; line-height: 150%;">link expires in an hour</p>
+                                                                                        
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="esd-block-button es-p20t es-p20b es-p10r es-p10l" align="center"><span class="es-button-border" style="background: #23395d;"><a href=${link} class="es-button" target="_blank" style="background: #23395d; border-color: #23395d; color: #ffffff;">Reset Password Now</a></span></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="es-content" cellspacing="0" cellpadding="0" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table class="es-content-body" style="background-color: #fcfcfc;" width="600" cellspacing="0" cellpadding="0" bgcolor="#fcfcfc" align="center">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="esd-structure es-p40t es-p25b es-p20r es-p20l" esd-custom-block-id="15790" align="left">
+                                                        <!--[if mso]><table width="560" cellpadding="0" 
+                            cellspacing="0"><tr><td width="274" valign="top"><![endif]-->
+                                                        <table class="es-left" cellspacing="0" cellpadding="0" align="left">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="es-m-p0r es-m-p20b esd-container-frame" width="254" align="center">
+                                                                        <table width="100%" cellspacing="0" cellpadding="0">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="esd-block-text" align="left">
+                                                                                        <h3 style="font-size: 17px;">Download the app for ease of operations</h3>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                    <td class="es-hidden" width="20"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <!--[if mso]></td><td width="133" valign="top"><![endif]-->
+                                                        <table class="es-left" cellspacing="0" cellpadding="0" align="left">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="es-m-p20b esd-container-frame" width="133" align="center">
+                                                                        <table width="100%" cellspacing="0" cellpadding="0">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="esd-block-image" align="center"><a target="_blank" href="https://viewstripo.email/"><img src="https://tlr.stripocdn.email/content/guids/CABINET_e48ed8a1cdc6a86a71047ec89b3eabf6/images/92051534250512328.png" alt="App Store" style="display: block;" class="adapt-img" title="App Store" width="133"></a></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <!--[if mso]></td><td width="20"></td><td width="133" valign="top"><![endif]-->
+                                                        <table class="es-right" cellspacing="0" cellpadding="0" align="right">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="esd-container-frame" width="133" align="center">
+                                                                        <table width="100%" cellspacing="0" cellpadding="0">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="esd-block-image" align="center"><a target="_blank" href="https://viewstripo.email/"><img class="adapt-img" src="https://tlr.stripocdn.email/content/guids/CABINET_e48ed8a1cdc6a86a71047ec89b3eabf6/images/82871534250557673.png" alt="Google Play" style="display: block;" title="Google Play" width="133"></a></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <!--[if mso]></td></tr></table><![endif]-->
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="es-content" cellspacing="0" cellpadding="0" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" style="background-color: #666666;" esd-custom-block-id="15624" bgcolor="#666666" align="center">
+                                        <table class="es-content-body" style="background-color: transparent;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="esd-structure" align="left">
+                                                        <table width="100%" cellspacing="0" cellpadding="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="esd-container-frame" width="600" valign="top" align="center">
+                                                                        <table style="background-color: #fff4f7; border-radius: 3px; border-collapse: separate;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#fff4f7">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="esd-block-spacer es-p5t es-p5b es-p20r es-p20l" bgcolor="#fff4f7" align="center">
+                                                                                        <table width="100%" height="100%" cellspacing="0" cellpadding="0" border="0">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td style="border-bottom: 1px solid #fff4f7; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%; height: 1px; width: 100%; margin: 0px;"></td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table cellpadding="0" cellspacing="0" class="es-footer" align="center">
+                            <tbody>
+                                <tr>
+                                <td class="esd-stripe" style="background-color: #666666;" esd-custom-block-id="15625" bgcolor="#666666" align="center">
+                                <table class="es-footer-body" style="background-color: #666666;" width="600" cellspacing="0" cellpadding="0" bgcolor="#666666" align="center">
+                                    <tbody>
+                                        <tr>
+                                            <td class="esd-structure es-p20t es-p20b es-p20r es-p20l" align="left">
+                                                <table width="100%" cellspacing="0" cellpadding="0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="esd-container-frame" width="560" valign="top" align="center">
+                                                                <table width="100%" cellspacing="0" cellpadding="0">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td esdev-links-color="#999999" class="esd-block-text" align="center">
+                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Southern Zonal Conference 2022.</p>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td esdev-links-color="#999999" class="esd-block-text es-p5b" align="center">
+                                                                                <p style="color: #ffffff;">Tuesday 2nd - Thursday 5th August, 2022, Virtually</p>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="esd-footer-popover es-content" cellspacing="0" cellpadding="0" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" style="background-color: #666666;" bgcolor="#666666" align="center">
+                                        <table class="es-content-body" style="background-color: #666666;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="esd-structure es-p30t es-p30b es-p20r es-p20l" align="left">
+                                                        <table width="100%" cellspacing="0" cellpadding="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="esd-container-frame" width="560" valign="top" align="center">
+                                                                        <table width="100%" cellspacing="0" cellpadding="0">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="esd-block-image es-infoblock made_with" align="center"><a target="_blank" href="https://www.icanezdconference.org.ng/"><img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt style="display: block; width: 115px; height: 143px;" height="143"></a></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>`;
+  },
 };

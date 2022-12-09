@@ -7,7 +7,7 @@ const mg = mailgun({ apiKey: process.env.MAIL_GUN_API_KEY, domain: process.env.D
 module.exports = {
     sendMail: function (to, subject, text, image) {
         const data = {
-            from: "ICAN <info@icansouthernzonalconference.org.ng>",
+            from: "ICAN <info@icaneasternzonalconference.org.ng>",
             to,
             subject,
             html: text
@@ -26,7 +26,7 @@ module.exports = {
             const mailOptions = {
                 html: template.sendCert(name),
                 to: to,
-                from: "ICAN <info@icansouthernzonalconference.org.ng>",
+                from: "ICAN <info@icaneasternzonalconference.org.ng>",
                 subject: subject,
                 attachments: [
                     {

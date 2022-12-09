@@ -2,13 +2,26 @@ const User = require("../models/User");
 const Invoice = require("../models/Invoice");
 const Settings = require("../models/Settings");
 const sms = require("./sms");
-// const email = require("./email.template");
+const email = require("./email.template");
 const mail = require("./mailgun");
 const Jimp = require("jimp");
 const escapeRegex = require("./searchRegex");
 const moment = require("moment");
 const cert = require("./sendCert");
+const user = require("./user");
+const validation = require("../validation/general-validation");
+const File = require("../models/Papers");
+const aws = require("aws-sdk");
+const fs = require("fs");
 
+s3 = new aws.S3({
+  credentials: {
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  },
+  Bucket: "imt-class",
+  apiVersion: "latest",
+});
 module.exports = {
   usersProjection: {
     __v: false,
@@ -127,20 +140,20 @@ module.exports = {
             user: user._id,
             amount: user.amount,
             invoiceId: new Date().getTime().toString().slice(5),
+            code: user.icanCode,
             name: user.name,
             email: user.email,
             phone: user.phone,
             gender: user.gender,
             shirtSize: user.tshirtSize,
             society: user.nameOfSociety,
-            code: user.icanCode,
           });
           invoice
             .save()
             .then(async (value) => {
               sms.sendOne(
                 user.phone,
-                `Dear ${user.name}, your payment for ICAN 2022 Conference has been confirmed, please login to your profile to print your receipt. Thanks`
+                `Dear ${user.name}, your payment for ICAN Eastern Zonal  Conference 2023 has been confirmed, please login to your profile to print your receipt. Thanks`
               );
               await cert.sendAfterConfirmed(user);
               resolve(user);
@@ -191,9 +204,10 @@ module.exports = {
         .catch((err) => reject(err));
     });
   },
-  uploadUsers: function (data) {
-    // console.log("🚀 ~ file: admin.js ~ line 133 ~ data", data)
-    return new Promise((resolve, reject) => {
+  uploadUsers: async (data) => {
+    // console.log("🚀 ~ file: admin.js ~ line 133 ~ data", data);
+
+    try {
       let users = data.map((value) => {
         if (typeof value.confirmedPayment === "string") {
           if (value.confirmedPayment.toLowerCase() === "true")
@@ -206,22 +220,60 @@ module.exports = {
         if (typeof value.confirmedPayment === "boolean") {
           value.confirmedPayment = value.confirmedPayment ? true : false;
         }
+        value.password = value.password.toString();
+        value.phone = value.phone.toString();
         value.tellerDate = moment().format();
         value.role = [{ name: value.role }];
+        value.confirm_password = value.password;
         return value;
       });
-      User.create(users)
-        .then((users) => {
-          users.forEach((user) => {
-            // sms.sendOne(user.phone, `Dear ${user.name}, You Have Successfully Registered for the 2022 ICAN Eastern Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `);
-            // mail.sendMail(user.email, "SUCCESSFULL REGISTRATION", email.register(user.name, user.email, user.password));
-          });
-          resolve(users);
-        })
-        .catch((err) => {
-          reject(err);
+      const addedUser = [];
+      users.forEach(async (user) => {
+        const { errors, isValid } = validation.register(user);
+        if (!isValid) {
+          console.log(errors);
+          return;
+        }
+        let existingUser = await User.findOne({ email: user.email });
+
+        if (existingUser) {
+          console.log({ email: "User with this email already exist" });
+          return;
+        }
+        const newUser = new User({
+          ...user,
         });
-    });
+        await newUser.save();
+        addedUser.push(user);
+        return user;
+      });
+      console.log(addedUser);
+      return addedUser;
+    } catch (err) {
+      console.log(err.message);
+    }
+    // return new Promise((resolve, reject) => {
+
+    //   try {
+
+    //   } catch (e) {
+    //     return res.status(400).json(e.message);
+    //   }
+    // User.create(users)
+    //   .then((users) => {
+    //     users.forEach((user) => {
+    //       // sms.sendOne(user.phone, `Dear ${user.name}, You Have Successfully Registered for the 2022 ICAN Eastern Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `);
+    //       mail.sendMail(
+    //         user.email,
+    //         "SUCCESSFULL REGISTRATION",
+    //         email.register(user.name, user.email, user.password)
+    //       );
+    //     });
+    //     resolve(users);
+    //   })
+    //   .catch((err) => {
+    //     reject(err);
+    //   });
   },
   getUsersReceipts: function () {
     return new Promise((resolve, reject) => {
@@ -244,10 +296,27 @@ module.exports = {
     });
   },
   sendCertificate: async function () {
-    let setting = await Setting.findOne({});
+    const page = 1;
+    const LIMIT = 100;
+    const startIndex = (Number(page) - 1) * LIMIT; // get the starting index of every page
+
+    let setting = await Settings.findOne({});
+    console.log(setting);
     let users = await this.getAllUsers();
     users = users.filter((user) => user.confirmedPayment);
 
+    // const users = await User.find({ confirmedPayment: true })
+    //   .sort({ _id: 1 })
+    //   .limit(LIMIT)
+    //   .skip(startIndex);
+
+    // let users = [
+    //   {
+    //     email: "katlybedrick@gmail.com",
+    //     name: "Okpala Obeddy",
+    //     memberAcronym: "ACA",
+    //   },
+    // ];
     // let users = [];
     // let obed = await User.find({ email: "meetbeddy@gmail.com" });
     // users = obed.filter((user) => user.confirmedPayment);
@@ -384,6 +453,160 @@ module.exports = {
       });
     } catch (e) {
       res.status(500).json({ success: false, message: e.message });
+    }
+  },
+  uploadPapers: async function (req, res, next) {
+    try {
+      if (!req.file)
+        return res
+          .status(400)
+          .json({ message: "please choose a file to upload" });
+      const { key, mimetype, location, size } = req?.file;
+      const lastUnderScore = key.lastIndexOf("__");
+      const file_name = key.slice(lastUnderScore + 2);
+      const file = new File({
+        file_key: key,
+        file_mimetype: mimetype,
+        file_location: location,
+        file_name,
+        file_size: size,
+      });
+      await file.save();
+      res.status(200).json({ message: "file upload successful" });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Something went wrong", error: error.message });
+    }
+  },
+
+  getPapers: async function (req, res, next) {
+    try {
+      const file = await File.find();
+      res.send(file);
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Something went wrong", error: error.message });
+    }
+  },
+  downloadPaper: async function (req, res, next) {
+    try {
+      const file = await File.findOne({ file_key: req.params.id });
+
+      res.set({
+        "Content-Type": file.file_mimetype,
+      });
+
+      const params = {
+        Key: file.file_key,
+        Bucket: "imt-class",
+      };
+
+      s3.getObject(params, (err, data) => {
+        if (err) {
+          res.status(400).json(`Error: ${err}`);
+        } else {
+          // return the file object from the DB, as well as the actual file data in the form of a buffer array from the S3 object
+          res.json({ file: file.cv, data });
+        }
+      });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Something went wrong", error: error.message });
+    }
+  },
+  deletePaper: async function (req, res, next) {
+    try {
+      await File.findOneAndDelete({ file_key: req.params.id });
+      const file = await File.find();
+
+      res.send({ file, message: "file deleted" });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Something went wrong", error: error.message });
+    }
+  },
+  fetchAsCsv: async function (req, res, next) {
+    try {
+      const users = await User.find({ confirmedPayment: true })
+        .sort({ name: -1 })
+        .select({
+          _id: 0,
+          name: 1,
+          email: 1,
+          phone: 1,
+          bankName: 1,
+          tellerNumber: 1,
+          tellerDate: 1,
+          gender: 1,
+          tshirtSize: 1,
+          memberStatus: 1,
+          icanCode: 1,
+          memberCategory: 1,
+          memberAcronym: 1,
+          nameOfSociety: 1,
+          venue: 1,
+          amount: 1,
+          confirmedPayment: 1,
+          createdAt: 1,
+        });
+
+      const csvstring = [
+        [
+          "Name",
+          "Email",
+          "Phone",
+          "Bank Name",
+          "tellerNumber",
+          "tellerDate",
+          "gender",
+          "tshirtSize",
+          "memberStatus",
+          "icanCode",
+          "memberCategory",
+          "memberAcronym",
+          "nameOfSociety",
+          "venue",
+          "amount",
+          "confirmedPayment",
+          "createdAt",
+        ],
+        ...users.map((user) => [
+          user.name,
+          user.email,
+          user.phone,
+          user.bankName,
+          user.tellerNumber,
+          user.tellerDate,
+          user.gender,
+          user.tshirtSize,
+          user.memberStatus,
+          user.icanCode,
+          user.memberCategory,
+          user.memberAcronym,
+          user.nameOfSociety,
+          user.venue,
+          user.amount,
+          user.confirmedPayment,
+          user.createdAt,
+        ]),
+      ]
+        .map((e) => e.join(","))
+        .join("\n");
+
+      fs.writeFile("users-details.csv", csvstring, (err) => {
+        if (err) {
+          console.error(err);
+        }
+      });
+      res.send(csvstring);
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Something went wrong", error: error.message });
     }
   },
 };

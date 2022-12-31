@@ -14,16 +14,19 @@ const Token = require("../../models/Token");
 
 /* POST route creates a user. */
 router.post("/auth/signup", async (req, res, next) => {
-  const { errors, isValid } = validation.register(req.body);
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-  User.findOne({ email: req.body.email }).then(async (user) => {
+  try {
+    const { errors, isValid } = validation.register(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
     const { memberCategory, nameOfSociety } = req.body;
-    if (user)
+    const existingUser = await User.findOne({ email: req.body.email });
+    
+    if (existingUser)
       return res
         .status(400)
-        .json({ email: "User with this email already exist" });
+        .json({ message: "user with this email already exist" });
+
     if (memberCategory === "half-paying member") {
       const halfPayingMembers = await User.find({
         nameOfSociety,
@@ -31,7 +34,7 @@ router.post("/auth/signup", async (req, res, next) => {
       });
       if (halfPayingMembers.length >= 2)
         return res.status(400).json({
-          memberCategory:
+          message:
             "More than 2 members have registerd as half-paying members for this district society, please contact admin",
         });
     }
@@ -40,16 +43,14 @@ router.post("/auth/signup", async (req, res, next) => {
       tellerDate: moment(req.body.tellerDate),
       role: { name: "User" },
     });
-    try {
-      await newUser.save();
-      return res.json({
-        message: "User created sucessfully",
-        success: true,
-      });
-    } catch (e) {
-      return res.status(400).json(e.message);
-    }
-  });
+    await newUser.save();
+    return res.json({
+      message: "User created sucessfully",
+      success: true,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "something went wrong" }, err.message);
+  }
 });
 
 /* POST route Logs user in. */

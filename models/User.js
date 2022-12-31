@@ -51,14 +51,16 @@ const userSchema = mongooseSchema(
         const memberStatus = this.memberStatus
           ? this.memberStatus.toLowerCase()
           : "";
-        if (memberStatus === "nonmember" && venue === "physical") return 35000;
+        if (memberStatus === "nonmember" && venue === "physical") return 45000;
         const memberCategory = this.memberCategory
           ? this.memberCategory.toLowerCase()
           : "";
-        if (memberCategory === "half-paying member") return 15000;
+        if (memberCategory === "half-paying member") return 20000;
         if (memberCategory === "full-paying member" && venue === "physical")
+          return 40000;
+        if (memberCategory === "young-accountants" && venue === "physical")
           return 30000;
-        if (venue === "virtual") return 15000;
+        if (venue === "virtual") return 20000;
 
         if (memberCategory === "admin" || memberCategory === "planning")
           return 0;
@@ -117,7 +119,7 @@ userSchema.pre("save", function (next) {
       if (err) return next(err);
       sms.sendOne(
         user.phone,
-        `Dear ${user.name}, You Have Successfully Registered for the 2022 ICAN Ican Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `
+        `Dear ${user.name}, You Have Successfully Registered for the 2023 ICAN Ican Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `
       );
       mail.sendMail(
         user.email,

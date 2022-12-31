@@ -350,12 +350,12 @@ module.exports = {
       const society = {};
       const shirtSize = {};
       const { balance } = await sms.getballance();
-      let users = await User.find();
+      let users = await User.find({ memberCategory: { $ne: "admin" } });
       const invoice = await Invoice.find({ scanned: true });
-      users = users.filter(
-        (value) =>
-          value.memberCategory && value.memberCategory.toLowerCase() !== "admin"
-      );
+      // users = users.filter(
+      //   (value) =>
+      //     value.memberCategory && value.memberCategory.toLowerCase() !== "admin"
+      // );
       const active = users.filter((value) => value.status === "active");
       const banned = users.filter((value) => value.status === "banned");
       const physical = users.filter(

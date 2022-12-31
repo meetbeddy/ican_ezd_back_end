@@ -424,7 +424,7 @@ module.exports = {
         numbers: halfPaymingMembers.length,
         amount: halfPaymingMembersTotal,
       };
-      stat.youngAccountants = {
+      stats.youngAccountants = {
         numbers: youngAccountants.length,
         amount: youngAccountantsTotal,
       };

@@ -13,6 +13,7 @@ const validation = require("../validation/general-validation");
 const File = require("../models/Papers");
 const aws = require("aws-sdk");
 const fs = require("fs");
+const { stat } = require("fs/promises");
 
 s3 = new aws.S3({
   credentials: {
@@ -351,6 +352,7 @@ module.exports = {
       const shirtSize = {};
       const { balance } = await sms.getballance();
       let users = await User.find({ memberCategory: { $ne: "admin" } });
+      const members = await User.find({ memberStatus: "member" });
       const invoice = await Invoice.find({ scanned: true });
       // users = users.filter(
       //   (value) =>
@@ -386,13 +388,22 @@ module.exports = {
         (acc, cur) => acc + cur.amount,
         0
       );
+      const youngAccountants = confirmed.filter(
+        (value) =>
+          value.memberCategory.toLowerCase().includes("young-accountants") &&
+          value.memberStatus.toLowerCase() === "member"
+      );
+      const youngAccountantsTotal = youngAccountants.reduce(
+        (acc, cur) => acc + cur.amount,
+        0
+      );
       const nonMembers = await User.find({ memberStatus: "nonmember" });
       const nonMembersTotal = nonMembers.reduce(
         (acc, cur) => acc + cur.amount,
         0
       );
 
-      users.forEach((user) => {
+      members.forEach((user) => {
         society[user.nameOfSociety] = society[user.nameOfSociety]
           ? [...society[user.nameOfSociety], user]
           : [user];
@@ -412,6 +423,10 @@ module.exports = {
       stats.halfPaymingMembers = {
         numbers: halfPaymingMembers.length,
         amount: halfPaymingMembersTotal,
+      };
+      stat.youngAccountants = {
+        numbers: youngAccountants.length,
+        amount: youngAccountantsTotal,
       };
       stats.nonMembers = {
         numbers: nonMembers.length,

@@ -23,6 +23,9 @@ app.use("/api/user", authRoute);
 app.use("/api/admin", AdminRoute);
 app.use("/api/attendant", userRoute);
 app.use("/api", api);
+app.use("/", (req,res)=>{
+    res.status(200).send("everything soft here");
+})
 const port = process.env.PORT || 5000;
 // mongoose.set('useCreateIndex', true)
 //database connect

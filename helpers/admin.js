@@ -28,62 +28,113 @@ module.exports = {
 		__v: false,
 		password: false,
 	},
-	paginated: function (query, data, model) {
-		return async (req, res, next) => {
-			if (req.user.role[0].name.toLowerCase() !== "admin") {
-				return res.status(401).json({ message: "unauthorized" });
-			}
-			if (req.query.search && req.query.search.trim()) {
-				regex = new RegExp(escapeRegex(req.query.search), "gi");
-				const result = {};
-				query.name = regex;
-				result.page = parseInt(req.query.page) || 1;
-				result.count = await await model.countDocuments(query);
-				try {
-					result.data = await model
-						.find(query, data)
-						.limit(parseInt(req.query.size || 10))
-						.skip(
-							((parseInt(req.query.page) || 1) - 1) *
-								(parseInt(req.query.size) || 10)
-						)
-						.exec();
-					req.result = result;
-					next();
-				} catch (e) {
-					return res.status(400).json({ message: e.message });
-				}
-				return next();
-			}
-			if (req.query.page) {
-				const result = {};
-				result.page = parseInt(req.query.page) || 1;
-				result.count = await await model.countDocuments(query);
-				try {
-					result.data = await model
-						.find(query, data)
-						.limit(parseInt(req.query.size || 10))
-						.skip(
-							((parseInt(req.query.page) || 1) - 1) *
-								(parseInt(req.query.size) || 10)
-						)
-						.exec();
-					req.result = result;
-					return next();
-				} catch (e) {
-					return res.status(400).json({ message: e.message });
-				}
-			}
+	paginated: async function (req, query, data, model) {
+		if (req.query.search && req.query.search.trim()) {
+			regex = new RegExp(escapeRegex(req.query.search), "gi");
 			const result = {};
+			query.name = regex;
+			result.page = parseInt(req.query.page) || 1;
+			result.count = await model.countDocuments(query);
+			try {
+				result.data = await model
+					.find(query, data)
+					.limit(parseInt(req.query.size || 10))
+					.skip(
+						((parseInt(req.query.page) || 1) - 1) *
+							(parseInt(req.query.size) || 10)
+					)
+					.exec();
+
+				return result;
+			} catch (e) {
+				throw new Error(e);
+				// return res.status(400).json({ message: e.message });
+			}
+		}
+
+		if (req.query.page) {
+			const result = {};
+			result.page = parseInt(req.query.page) || 1;
 			result.count = await await model.countDocuments(query);
 			try {
-				result.data = await model.find(query, data);
-				req.result = result;
-				return next();
+				result.data = await model
+					.find(query, data)
+					.limit(parseInt(req.query.size || 10))
+					.skip(
+						((parseInt(req.query.page) || 1) - 1) *
+							(parseInt(req.query.size) || 10)
+					)
+					.exec();
+
+				return result;
 			} catch (e) {
-				return res.status(400).json({ message: e.message });
+				throw new Error(e);
 			}
-		};
+		}
+		const result = {};
+		result.count = await await model.countDocuments(query);
+		try {
+			result.data = await model.find(query, data);
+
+			return result;
+		} catch (e) {
+			throw new Error(e);
+		}
+		// return async (req, res, next) => {
+		// 	if (req.user.role[0].name.toLowerCase() !== "admin") {
+		// 		return res.status(401).json({ message: "unauthorized" });
+		// 	}
+		// 	if (req.query.search && req.query.search.trim()) {
+		// 		regex = new RegExp(escapeRegex(req.query.search), "gi");
+		// 		const result = {};
+		// 		query.name = regex;
+		// 		result.page = parseInt(req.query.page) || 1;
+		// 		result.count = await model.countDocuments(query);
+		// 		try {
+		// 			result.data = await model
+		// 				.find(query, data)
+		// 				.limit(parseInt(req.query.size || 10))
+		// 				.skip(
+		// 					((parseInt(req.query.page) || 1) - 1) *
+		// 						(parseInt(req.query.size) || 10)
+		// 				)
+		// 				.exec();
+		// 			req.result = result;
+		// 			next();
+		// 		} catch (e) {
+		// 			return res.status(400).json({ message: e.message });
+		// 		}
+		// 		return next();
+		// 	}
+		// 	if (req.query.page) {
+		// 		const result = {};
+		// 		result.page = parseInt(req.query.page) || 1;
+		// 		result.count = await await model.countDocuments(query);
+		// 		try {
+		// 			result.data = await model
+		// 				.find(query, data)
+		// 				.limit(parseInt(req.query.size || 10))
+		// 				.skip(
+		// 					((parseInt(req.query.page) || 1) - 1) *
+		// 						(parseInt(req.query.size) || 10)
+		// 				)
+		// 				.exec();
+		// 			req.result = result;
+		// 			return next();
+		// 		} catch (e) {
+		// 			return res.status(400).json({ message: e.message });
+		// 		}
+		// 	}
+		// 	const result = {};
+		// 	result.count = await await model.countDocuments(query);
+		// 	try {
+		// 		result.data = await model.find(query, data);
+		// 		req.result = result;
+		// 		return next();
+		// 	} catch (e) {
+		// 		return res.status(400).json({ message: e.message });
+		// 	}
+		// };
 	},
 	getAllUsers: function () {
 		return new Promise((resolve, reject) => {

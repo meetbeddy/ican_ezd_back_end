@@ -9,51 +9,95 @@ const upload = require("../../configs/awsConfig").upload;
 router.get(
 	"/all/users",
 	passport.authenticate("jwt", { session: false }),
-	adminHelper.paginated({}, { __v: false, password: false }, Users),
 	(req, res) => {
-		res.json(req.result);
+		if (req.user.role[0].name.toLowerCase() !== "admin") {
+			return res.status(401).json({ message: "unauthorized" });
+		}
+		adminHelper
+			.paginated(req, {}, { __v: false, password: false }, Users)
+			.then((result) => {
+				res.json(result);
+			})
+			.catch((err) => res.status(400).json(err));
 	}
 );
 router.get(
 	"/all/users/new",
 	passport.authenticate("jwt", { session: false }),
-	adminHelper.paginated(
-		{ confirmedPayment: false },
-		{ __v: false, password: false },
-		Users
-	),
+
 	(req, res) => {
-		res.json(req.result);
+		if (req.user.role[0].name.toLowerCase() !== "admin") {
+			return res.status(401).json({ message: "unauthorized" });
+		}
+		adminHelper
+			.paginated(
+				req,
+				{ confirmedPayment: false },
+				{ __v: false, password: false },
+				Users
+			)
+			.then((result) => {
+				res.json(result);
+			})
+			.catch((err) => res.status(400).json(err));
 	}
 );
 router.get(
 	"/all/users/active",
 	passport.authenticate("jwt", { session: false }),
-	adminHelper.paginated(
-		{ status: "active", confirmedPayment: true },
-		{ __v: false, password: false },
-		Users
-	),
 	(req, res) => {
-		res.json(req.result);
+		if (req.user.role[0].name.toLowerCase() !== "admin") {
+			return res.status(401).json({ message: "unauthorized" });
+		}
+		adminHelper
+			.paginated(
+				req,
+				{ status: "active", confirmedPayment: true },
+				{ __v: false, password: false },
+				Users
+			)
+			.then((result) => {
+				res.json(result);
+			})
+			.catch((err) => res.status(400).json(err));
 	}
 );
 router.get(
 	"/all/users/banned",
 	passport.authenticate("jwt", { session: false }),
-	adminHelper.paginated(
-		{ status: "banned" },
-		{ __v: false, password: false },
-		Users
-	),
-	(req, res) => res.json(req.result)
+	(req, res) => {
+		if (req.user.role[0].name.toLowerCase() !== "admin") {
+			return res.status(401).json({ message: "unauthorized" });
+		}
+		adminHelper
+			.paginated(
+				req,
+				{ status: "banned" },
+				{ __v: false, password: false },
+				Users
+			)
+			.then((result) => {
+				res.json(result);
+			})
+			.catch((err) => res.status(400).json(err));
+	}
 );
 
 router.get(
 	"/users/receipts",
 	passport.authenticate("jwt", { session: false }),
-	adminHelper.paginated({}, { __v: false, password: false }, Receipt),
-	(req, res) => res.json(req.result)
+
+	(req, res) => {
+		if (req.user.role[0].name.toLowerCase() !== "admin") {
+			return res.status(401).json({ message: "unauthorized" });
+		}
+		adminHelper
+			.paginated(req, {}, { __v: false, password: false }, Receipt)
+			.then((result) => {
+				res.json(result);
+			})
+			.catch((err) => res.status(400).json(err));
+	}
 );
 router.put(
 	"/user/activate",
@@ -62,6 +106,7 @@ router.put(
 		if (req.user.role[0].name.toLowerCase() !== "admin") {
 			return res.status(401).json({ message: "unauthorized" });
 		}
+
 		adminHelper
 			.activeUser(req.query.id)
 			.then((doc) => {

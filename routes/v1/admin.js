@@ -59,7 +59,27 @@ router.get(
 			.then((result) => {
 				res.json(result);
 			})
-			.catch((err) => res.status(400).json(err));
+			.catch((err) => res.status(400).json(err, err.message));
+	}
+);
+router.get(
+	"/all/users/virtual",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		if (req.user.role[0].name.toLowerCase() !== "admin") {
+			return res.status(401).json({ message: "unauthorized" });
+		}
+		adminHelper
+			.paginated(
+				req,
+				{ status: "active", venue: "virtual" },
+				{ __v: false, password: false },
+				Users
+			)
+			.then((result) => {
+				res.json(result);
+			})
+			.catch((err) => res.status(400).json(err, err.message));
 	}
 );
 router.get(

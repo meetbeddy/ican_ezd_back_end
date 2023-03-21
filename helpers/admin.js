@@ -425,10 +425,15 @@ module.exports = {
 		});
 	},
 	sendSMS: async function (message) {
-		let users = await this.getAllUsers();
+		//  await this.getAllUsers();
+		let users = await User.find(
+			{ status: "active", confirmedPayment: true },
+			this.usersProjection
+		);
 		let usersPhone = await users.map((user) => user.phone);
 		return new Promise((resolve, reject) => {
 			let dataToSend = usersPhone.join(",");
+
 			sms
 				.sendMany(dataToSend, message)
 				.then(() => resolve(users.length))

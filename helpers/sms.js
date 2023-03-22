@@ -13,15 +13,29 @@ module.exports = {
 		});
 	},
 	sendMany: function (to, message) {
+		// let newMessage = `WELCOME TO 1ST PLENARY SESSION OF EZC.
+		// time is 9am.
+		// virtual participants should check thier email for link. Enjoy your conference.`;
+
 		return new Promise((resolve, reject) => {
 			axios
-				.get(
-					`https://portal.nigeriabulksms.com/api/?username=${process.env.SMS_USERNAME}&password=${process.env.SMS_PASSWORD}&message=${message}&sender=ICAN&mobiles=${to}`
-				)
-				.then((res) => {
-					resolve(res.date);
+				.get("https://portal.nigeriabulksms.com/api/", {
+					params: {
+						username: process.env.SMS_USERNAME,
+						password: process.env.SMS_PASSWORD,
+						message: message,
+						sender: "ICAN",
+						mobiles: to,
+					},
 				})
-				.catch((err) => reject(err));
+				.then((res) => {
+					console.log(res.data);
+					resolve(res.data);
+				})
+				.catch((err) => {
+					console.log(err.message);
+					reject(err);
+				});
 		});
 	},
 	getballance: function () {

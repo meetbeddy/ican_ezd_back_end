@@ -14,6 +14,7 @@ const File = require("../models/Papers");
 const aws = require("aws-sdk");
 const fs = require("fs");
 const { stat } = require("fs/promises");
+const { error } = require("console");
 
 s3 = new aws.S3({
 	credentials: {
@@ -316,6 +317,7 @@ module.exports = {
 				value.tellerDate = moment().format();
 				value.role = [{ name: value.role }];
 				value.confirm_password = value.password;
+				value.bulk = true;
 				return value;
 			});
 			const addedUser = [];
@@ -323,12 +325,14 @@ module.exports = {
 				const { errors, isValid } = validation.register(user);
 				if (!isValid) {
 					console.log(errors);
-					return;
+					throw new Error(errors);
 				}
 				let existingUser = await User.findOne({ email: user.email });
 
 				if (existingUser) {
 					console.log({ email: "User with this email already exist" });
+
+					// throw new Error("user with this email already exist");
 					return;
 				}
 				const newUser = new User({
@@ -341,7 +345,7 @@ module.exports = {
 			console.log(addedUser);
 			return addedUser;
 		} catch (err) {
-			console.log(err.message);
+			throw new Error(err);
 		}
 		// return new Promise((resolve, reject) => {
 
@@ -387,30 +391,34 @@ module.exports = {
 		});
 	},
 	sendCertificate: async function () {
-		const page = 1;
-		const LIMIT = 100;
+		const total = await User.countDocuments({});
+		const page = 3;
+		const LIMIT = 50;
 		const startIndex = (Number(page) - 1) * LIMIT; // get the starting index of every page
 
-		let setting = await Settings.findOne({});
-		console.log(setting);
-		let users = await this.getAllUsers();
-		users = users.filter((user) => user.confirmedPayment);
+		console.log("pages -", Math.ceil(total / LIMIT));
+		console.log("start index -", startIndex);
 
-		// const users = await User.find({ confirmedPayment: true })
-		//   .sort({ _id: 1 })
-		//   .limit(LIMIT)
-		//   .skip(startIndex);
+		let setting = await Settings.findOne({});
+		// console.log(setting);
+		// let users = await this.getAllUsers();
+		// users = users.filter((user) => user.confirmedPayment);
+
+		const users = await User.find({ confirmedPayment: true })
+			.sort({ _id: 1 })
+			.limit(LIMIT)
+			.skip(startIndex);
 
 		// let users = [
-		//   {
-		//     email: "katlybedrick@gmail.com",
-		//     name: "Okpala Obeddy",
-		//     memberAcronym: "ACA",
-		//   },
+		// 	{
+		// 		email: "katlybedrick@gmail.com",
+		// 		name: "Okpala Obeddy Ogechukwu",
+		// 		memberAcronym: "ACA",
+		// 	},
 		// ];
 		// let users = [];
-		// let obed = await User.find({ email: "meetbeddy@gmail.com" });
-		// users = obed.filter((user) => user.confirmedPayment);
+		// let users = await User.find({ email: "meetbeddy@gmail.com" });
+		// const users = obed.filter((user) => user.confirmedPayment);
 
 		return new Promise((resolve, reject) => {
 			if ((setting && !setting.certificate) || !setting) {
@@ -426,10 +434,7 @@ module.exports = {
 	},
 	sendSMS: async function (message) {
 		//  await this.getAllUsers();
-		let users = await User.find(
-			{ status: "active", confirmedPayment: true },
-			this.usersProjection
-		);
+		let users = await User.find({ status: "active" }, this.usersProjection);
 		let usersPhone = await users.map((user) => user.phone);
 		return new Promise((resolve, reject) => {
 			let dataToSend = usersPhone.join(",");

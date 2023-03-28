@@ -117,16 +117,19 @@ userSchema.pre("save", function (next) {
 		if (err) return next(err);
 		bcrypt.hash(user.password, salt, (err, hash) => {
 			if (err) return next(err);
+
 			sms.sendOne(
 				user.phone,
 				`Dear ${user.name}, You Have Successfully Registered for the 2023 ICAN Ican Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `
 			);
-			mail.sendMail(
-				user.email,
-				"SUCCESSFULL REGISTRATION",
-				template.register(user.name, user.email, user.password)
-			);
-			user.password = hash;
+			if (!user.bulk) {
+				mail.sendMail(
+					user.email,
+					"SUCCESSFULL REGISTRATION",
+					template.register(user.name, user.email, user.password)
+				);
+				user.password = hash;
+			}
 			next();
 		});
 	});

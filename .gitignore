@@ -5,3 +5,4 @@ dbcredential.txt
 package-lock.json
 yarn.lock
 /haters
+certs/

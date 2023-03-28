@@ -13,9 +13,10 @@ module.exports = {
 		});
 	},
 	sendMany: function (to, message) {
-		// let newMessage = `WELCOME TO 1ST PLENARY SESSION OF EZC.
-		// time is 9am.
-		// virtual participants should check thier email for link. Enjoy your conference.`;
+		// let newMessage = `Thank You.
+		// Eastern Zonal Accountants Conference Expresses her gratitude to you for your participation at our conference, Awka 2023.
+		// We wish you journey mercy as you return to your base.
+		// Best regards`;
 
 		return new Promise((resolve, reject) => {
 			axios

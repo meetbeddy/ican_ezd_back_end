@@ -60,7 +60,7 @@ const userSchema = mongooseSchema(
 					return 40000;
 				if (memberCategory === "young-accountants" && venue === "physical")
 					return 30000;
-				if (venue === "virtual") return 20000;
+				if (venue === "virtual") return 30000;
 
 				if (memberCategory === "admin" || memberCategory === "planning")
 					return 0;
@@ -120,7 +120,7 @@ userSchema.pre("save", function (next) {
 
 			sms.sendOne(
 				user.phone,
-				`Dear ${user.name}, You Have Successfully Registered for the 2023 ICAN Ican Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `
+				`Dear ${user.name}, You Have Successfully Registered for the 2024 ICAN Ican Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `
 			);
 			if (!user.bulk) {
 				mail.sendMail(

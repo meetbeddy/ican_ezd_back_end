@@ -209,7 +209,7 @@ module.exports = {
 
 			sms.sendOne(
 				user.phone,
-				`Dear ${user.name}, your payment for ICAN Eastern Zonal  Conference 2023 has been confirmed, please login to your profile to print your receipt. Thanks`
+				`Dear ${user.name}, your payment for ICAN Eastern Zonal  Conference 2024 has been confirmed, please login to your profile to print your receipt. Thanks`
 			);
 			await cert.sendAfterConfirmed(user);
 
@@ -245,7 +245,7 @@ module.exports = {
 		//         .then(async (value) => {
 		//           sms.sendOne(
 		//             user.phone,
-		//             `Dear ${user.name}, your payment for ICAN Eastern Zonal  Conference 2023 has been confirmed, please login to your profile to print your receipt. Thanks`
+		//             `Dear ${user.name}, your payment for ICAN Eastern Zonal  Conference 2024 has been confirmed, please login to your profile to print your receipt. Thanks`
 		//           );
 		//           await cert.sendAfterConfirmed(user);
 		//           resolve(user);

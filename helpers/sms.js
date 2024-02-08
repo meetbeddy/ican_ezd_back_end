@@ -14,7 +14,7 @@ module.exports = {
 	},
 	sendMany: function (to, message) {
 		// let newMessage = `Thank You.
-		// Eastern Zonal Accountants Conference Expresses her gratitude to you for your participation at our conference, Awka 2023.
+		// Eastern Zonal Accountants Conference Expresses her gratitude to you for your participation at our conference, Awka 2024.
 		// We wish you journey mercy as you return to your base.
 		// Best regards`;
 

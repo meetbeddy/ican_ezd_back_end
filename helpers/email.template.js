@@ -55,7 +55,7 @@ module.exports = {
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td class="esd-block-text es-p10t es-p20r es-p20l" bgcolor="#fcfcfc" align="left">
-                                                                                        <p>Hi ${name}, you have successfully registered for the upcoming ICAN Eastern Conference slated for Tuesday 21st - Friday 24th March, 2023. The Conference Will Now Hold Virtually and Physically.</p>
+                                                                                        <p>Hi ${name}, you have successfully registered for the upcoming ICAN Eastern Conference slated for Monday 4th - Thursday 7th March, 2024. The Conference Will Now Hold Virtually and Physically.</p>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -226,12 +226,12 @@ module.exports = {
                                                                     <tbody>
                                                                         <tr>
                                                                             <td esdev-links-color="#999999" class="esd-block-text" align="center">
-                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2023.</p>
+                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2024.</p>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td esdev-links-color="#999999" class="esd-block-text es-p5b" align="center">
-                                                                                <p style="color: #ffffff;">Tuesday 21st - Friday 24th March, 2023, Virtually</p>
+                                                                                <p style="color: #ffffff;">Monday 4th - Thursday 7th March, 2024, Virtually</p>
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>
@@ -346,7 +346,7 @@ module.exports = {
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td class="esd-block-text es-m-txt-c es-p10t es-p10b" align="left">
-                                                                                            <p style="line-height: 150%;">Thank you for attending the 2023 ICAN Eastern ZONAL CONFERENCE.</p>
+                                                                                            <p style="line-height: 150%;">Thank you for attending the 2024 ICAN Eastern ZONAL CONFERENCE.</p>
                                                                                             <p style="color: red; font-style: italic;text-align: center;">
                                                                                               Click Download to Download the IMAGE
                                                                                             </p>
@@ -666,12 +666,12 @@ module.exports = {
                                                                     <tbody>
                                                                         <tr>
                                                                             <td esdev-links-color="#999999" class="esd-block-text" align="center">
-                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2023.</p>
+                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2024.</p>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td esdev-links-color="#999999" class="esd-block-text es-p5b" align="center">
-                                                                                <p style="color: #ffffff;">Tuesday 21st - Friday 24th March, 2023, Virtually</p>
+                                                                                <p style="color: #ffffff;">Monday 4th - Thursday 7th March, 2024, Virtually</p>
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>

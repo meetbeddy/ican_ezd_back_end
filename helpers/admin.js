@@ -451,70 +451,99 @@ module.exports = {
 			const society = {};
 			const shirtSize = {};
 			const { balance } = await sms.getballance();
-
-			// Fetch all users except admin users
 			let users = await User.find({ memberCategory: { $ne: "admin" } });
-
-			// Fetch members separately
 			const members = await User.find({ memberStatus: "member" });
-
-			// Fetch all scanned invoices
-			const invoices = await Invoice.find({ scanned: true });
-
-			// Calculate various statistics
-			const activeUsers = users.filter((user) => user.status === "active");
-			const bannedUsers = users.filter((user) => user.status === "banned");
-			const confirmedUsers = users.filter((user) => user.confirmedPayment);
-			const unconfirmedUsers = users.filter((user) => !user.confirmedPayment);
-			const physicalUsers = users.filter((user) => user.venue.toLowerCase() === "physical");
-			const virtualUsers = users.filter((user) => user.venue.toLowerCase() === "virtual");
-
-			const fullPayingMembers = confirmedUsers.filter((user) =>
-				user.memberCategory.toLowerCase().includes("full-paying member")
+			const invoice = await Invoice.find({ scanned: true });
+			// users = users.filter(
+			//   (value) =>
+			//     value.memberCategory && value.memberCategory.toLowerCase() !== "admin"
+			// );
+			const active = users.filter((value) => value.status === "active");
+			const banned = users.filter((value) => value.status === "banned");
+			const physical = users.filter(
+				(value) => value.venue.toLowerCase() === "physical"
 			);
-			const halfPayingMembers = confirmedUsers.filter((user) =>
-				user.memberCategory.toLowerCase().includes("half-paying member")
+			const virtual = users.filter(
+				(value) => value.venue.toLowerCase() === "virtual"
 			);
-			const youngAccountants = confirmedUsers.filter((user) =>
-				user.memberCategory.toLowerCase().includes("young-accountants")
+			const confirmed = users.filter((value) => value.confirmedPayment);
+			const unConfirmed = users.filter((value) => !value.confirmedPayment);
+			const fullPaymingMembers = confirmed.filter(
+				(value) =>
+					(value.memberCategory.toLowerCase().includes("full-paying member") ||
+						value.memberCategory.toLowerCase().includes("full paying")) &&
+					value.memberStatus.toLowerCase() === "member"
 			);
-			const nonMembers = confirmedUsers.filter((user) => user.memberStatus.toLowerCase() === "nonmember");
+			const fullPaymingMembersTotal = fullPaymingMembers.reduce(
+				(acc, cur) => acc + cur.amount,
+				0
+			);
+			const halfPaymingMembers = confirmed.filter(
+				(value) =>
+					(value.memberCategory.toLowerCase().includes("half-paying member") ||
+						value.memberCategory.toLowerCase().includes("half paying")) &&
+					value.memberStatus.toLowerCase() === "member"
+			);
+			const halfPaymingMembersTotal = halfPaymingMembers.reduce(
+				(acc, cur) => acc + cur.amount,
+				0
+			);
+			const youngAccountants = confirmed.filter(
+				(value) =>
+					value.memberCategory.toLowerCase().includes("young-accountants") &&
+					value.memberStatus.toLowerCase() === "member"
+			);
+			const youngAccountantsTotal = youngAccountants.reduce(
+				(acc, cur) => acc + cur.amount,
+				0
+			);
+			const nonMembers = await confirmed.filter((value) => value.memberStatus.toLowerCase() === "nonmember");
+			const nonMembersTotal = nonMembers.reduce(
+				(acc, cur) => acc + cur.amount,
+				0
+			);
 
-			// Populate society and shirtSize objects
 			members.forEach((user) => {
-				society[user.nameOfSociety] = society[user.nameOfSociety] ? [...society[user.nameOfSociety], user] : [user];
-				shirtSize[user.tshirtSize] = shirtSize[user.tshirtSize] ? [...shirtSize[user.tshirtSize], user] : [user];
+				society[user.nameOfSociety] = society[user.nameOfSociety]
+					? [...society[user.nameOfSociety], user]
+					: [user];
+				shirtSize[user.tshirtSize] = shirtSize[user.tshirtSize]
+					? [...shirtSize[user.tshirtSize], user]
+					: [user];
 			});
-
-			// Calculate total amounts for each category
-			const fullPayingMembersTotal = fullPayingMembers.reduce((total, user) => total + user.amount, 0);
-			const halfPayingMembersTotal = halfPayingMembers.reduce((total, user) => total + user.amount, 0);
-			const youngAccountantsTotal = youngAccountants.reduce((total, user) => total + user.amount, 0);
-			const nonMembersTotal = nonMembers.reduce((total, user) => total + user.amount, 0);
-
-			// Populate stats object
 			stats.registered = users.length;
-			stats.active = activeUsers.length;
-			stats.banned = bannedUsers.length;
-			stats.confirmed = confirmedUsers.length;
-			stats.unconfirmed = unconfirmedUsers.length;
-			stats.fullPayingMembers = { numbers: fullPayingMembers.length, amount: fullPayingMembersTotal };
-			stats.halfPayingMembers = { numbers: halfPayingMembers.length, amount: halfPayingMembersTotal };
-			stats.youngAccountants = { numbers: youngAccountants.length, amount: youngAccountantsTotal };
-			stats.nonMembers = { numbers: nonMembers.length, amount: nonMembersTotal };
+			stats.active = active.length;
+			stats.banned = banned.length;
+			stats.confirmed = confirmed.length;
+			stats.unConfirmed = unConfirmed.length;
+			stats.fullPaymingMembers = {
+				numbers: fullPaymingMembers.length,
+				amount: fullPaymingMembersTotal,
+			};
+			stats.halfPaymingMembers = {
+				numbers: halfPaymingMembers.length,
+				amount: halfPaymingMembersTotal,
+			};
+			stats.youngAccountants = {
+				numbers: youngAccountants.length,
+				amount: youngAccountantsTotal,
+			};
+			stats.nonMembers = {
+				numbers: nonMembers.length,
+				amount: nonMembersTotal,
+			};
 			stats.society = society;
 			stats.shirtSize = shirtSize;
 			stats.balance = balance;
-			stats.physical = physicalUsers.length;
-			stats.virtual = virtualUsers.length;
-			stats.attended = invoices.length;
+			stats.physical = physical.length;
+			stats.virtual = virtual.length;
+			stats.attended = invoice.length;
 
 			res.json(stats);
-		} catch (error) {
-			res.status(500).json({ error: "Internal Server Error" });
+		} catch (e) {
+			res.status(400).json(e);
 		}
 	},
-
 	markAttendance: async function (req, res, next) {
 		const { search } = req.body;
 

@@ -7,10 +7,10 @@ fs = require("fs");
 dot.config();
 db();
 const setUp = async () => {
-	const cert = await Jimp.read("no cert.jpg");
+	const cert = await Jimp.read("ezd-certificate.jpg");
 	const origImageDim = { width: cert.bitmap.width, height: cert.bitmap.height };
 	cert
-		.resize((origImageDim.width * 45) / 100, (origImageDim.height * 45) / 100) // resize
+		.resize((origImageDim.width * 51) / 100, (origImageDim.height * 51) / 100) // resize
 		.quality(70);
 	const font = await Jimp.loadFont(Jimp.FONT_SANS_16_BLACK);
 	return {
@@ -40,14 +40,14 @@ const printCert = async ({ cert, font, name, email, mail }) => {
 	cert
 		.print(
 			font,
-			130,
+			87,
 			110,
 			{
 				text: name,
 				alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
 				alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
 			},
-			300,
+			370,
 			202
 		)
 		.write(`certs/${name}.png`);

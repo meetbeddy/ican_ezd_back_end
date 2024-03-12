@@ -342,7 +342,6 @@ module.exports = {
 				addedUser.push(user);
 				return user;
 			});
-			console.log(addedUser);
 			return addedUser;
 		} catch (err) {
 			throw new Error(err);
@@ -392,8 +391,8 @@ module.exports = {
 	},
 	sendCertificate: async function () {
 		const total = await User.countDocuments({});
-		const page = 3;
-		const LIMIT = 50;
+		const page = 1;
+		const LIMIT = 20;
 		const startIndex = (Number(page) - 1) * LIMIT; // get the starting index of every page
 
 		console.log("pages -", Math.ceil(total / LIMIT));

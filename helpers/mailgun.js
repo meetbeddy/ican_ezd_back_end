@@ -24,6 +24,23 @@ module.exports = {
 			});
 		});
 	},
+	sendReceiptEmail: function (to, mode, invoiceData) {
+		const data = {
+			from: "ICAN <info@icaneasternzonalconference.org.ng>",
+			to,
+			subject: `ICAN Conference Payment Receipt - ${invoiceData.invoiceId}`,
+			html: template.sendReceipt(invoiceData.name, mode, invoiceData)
+		};
+
+		return new Promise((resolve, reject) => {
+			mg.messages().send(data, function (error, body) {
+				if (error) {
+					return reject(error);
+				}
+				resolve(body);
+			});
+		});
+	},
 	sendCert: function (to, base64, subject, name) {
 		return new Promise((resolve, reject) => {
 			const mailOptions = {

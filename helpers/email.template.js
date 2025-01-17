@@ -1,5 +1,5 @@
 module.exports = {
-  header: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    header: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html>
     
     <head>
@@ -19,8 +19,8 @@ module.exports = {
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i" rel="stylesheet">
         <!--<![endif]-->
     </head>`,
-  register: function (name, email, password) {
-    return `
+    register: function (name, email, password) {
+        return `
     ${this.header}
 
 <body>
@@ -55,7 +55,7 @@ module.exports = {
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td class="esd-block-text es-p10t es-p20r es-p20l" bgcolor="#fcfcfc" align="left">
-                                                                                        <p>Hi ${name}, you have successfully registered for the upcoming ICAN Eastern Conference slated for Monday 4th - Thursday 7th March, 2024. The Conference Will Now Hold Virtually and Physically.</p>
+                                                                                        <p>Hi ${name}, you have successfully registered for the upcoming ICAN Eastern Conference slated for Tuesday 1st - Friday 4th April, 2025. The Conference Will Now Hold Virtually and Physically.</p>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -226,12 +226,12 @@ module.exports = {
                                                                     <tbody>
                                                                         <tr>
                                                                             <td esdev-links-color="#999999" class="esd-block-text" align="center">
-                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2024.</p>
+                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2025.</p>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td esdev-links-color="#999999" class="esd-block-text es-p5b" align="center">
-                                                                                <p style="color: #ffffff;">Monday 4th - Thursday 7th March, 2024, Virtually</p>
+                                                                                <p style="color: #ffffff;">Tuesday 1st - Friday 4th April, 2025, Virtually</p>
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>
@@ -287,9 +287,9 @@ module.exports = {
 </body>
 
 </html>`;
-  },
-  sendCert: function (name) {
-    return `${this.header}
+    },
+    sendCert: function (name) {
+        return `${this.header}
         <body>
         <div class="es-wrapper-color">
             <!--[if gte mso 9]>
@@ -346,7 +346,7 @@ module.exports = {
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td class="esd-block-text es-m-txt-c es-p10t es-p10b" align="left">
-                                                                                            <p style="line-height: 150%;">Thank you for attending the 2024 ICAN Eastern ZONAL CONFERENCE.</p>
+                                                                                            <p style="line-height: 150%;">Thank you for attending the 2025 ICAN Eastern ZONAL CONFERENCE.</p>
                                                                                             <p style="color: red; font-style: italic;text-align: center;">
                                                                                               Click Download to Download the IMAGE
                                                                                             </p>
@@ -457,10 +457,10 @@ module.exports = {
         </div>
     </body>
         `;
-  },
+    },
 
-  forgotpassword: function (name, email, link) {
-    return `
+    forgotpassword: function (name, email, link) {
+        return `
     ${this.header}
 
 <body>
@@ -666,12 +666,12 @@ module.exports = {
                                                                     <tbody>
                                                                         <tr>
                                                                             <td esdev-links-color="#999999" class="esd-block-text" align="center">
-                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2024.</p>
+                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2025.</p>
                                                                             </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td esdev-links-color="#999999" class="esd-block-text es-p5b" align="center">
-                                                                                <p style="color: #ffffff;">Monday 4th - Thursday 7th March, 2024, Virtually</p>
+                                                                                <p style="color: #ffffff;">Tuesday 1st - Friday 4th April, 2025, Virtually</p>
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>
@@ -727,5 +727,122 @@ module.exports = {
 </body>
 
 </html>`;
-  },
+    },
+    sendReceipt: function (name, mode, invoiceData) {
+        return `
+    ${this.header}
+    <body>
+        <div class="es-wrapper-color">
+            <table class="es-wrapper" width="100%" cellspacing="0" cellpadding="0">
+                <tbody>
+                    <tr>
+                        <td class="esd-email-paddings" valign="top">
+                            <table class="es-content" cellspacing="0" cellpadding="0" align="center">
+                                <tbody>
+                                    <tr>
+                                        <td class="esd-stripe" align="center">
+                                            <table class="es-content-body" style="background-color: #ffffff;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="esd-structure es-p20t es-p20b es-p40r es-p40l" align="left">
+                                                            <table width="100%" cellspacing="0" cellpadding="0">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td class="esd-container-frame" width="520" valign="top" align="center">
+                                                                            <table width="100%" cellspacing="0" cellpadding="0">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td class="esd-block-text" align="left">
+                                                                                            <h1 style="color: #333333;">Payment Receipt</h1>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="esd-block-text es-p15t" align="left">
+                                                                                            <p>Dear ${name},</p>
+                                                                                            <p>Thank you for your payment. Below are your transaction details:</p>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="esd-structure es-p20t es-p20b es-p40r es-p40l" align="left">
+                                                            <table width="100%" cellspacing="0" cellpadding="0">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td class="esd-container-frame" width="520" valign="top" align="center">
+                                                                            <table width="100%" cellspacing="0" cellpadding="0" style="border: 1px solid #efefef;">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td style="padding: 10px; border-bottom: 1px solid #efefef;">
+                                                                                            <strong>Invoice Number:</strong> ${invoiceData.invoiceId}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td style="padding: 10px; border-bottom: 1px solid #efefef;">
+                                                                                            <strong>Amount Paid:</strong> ₦${invoiceData.amount.toLocaleString()}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td style="padding: 10px; border-bottom: 1px solid #efefef;">
+                                                                                            <strong>ICAN Code:</strong> ${invoiceData.code}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td style="padding: 10px;">
+                                                                                            <strong>Payment Date:</strong> ${new Date().toLocaleDateString()}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="esd-structure es-p20t es-p20b es-p40r es-p40l" align="left">
+                                                            <table width="100%" cellspacing="0" cellpadding="0">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td class="esd-container-frame" width="520" valign="top" align="center">
+                                                                            <table width="100%" cellspacing="0" cellpadding="0">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td class="esd-block-text" align="left">
+                                                                                            <p>This receipt confirms your registration for the ICAN Eastern Zonal Conference 2025.</p>
+                                                                                            <p>Conference Details:</p>
+                                                                                            <p>Date: Tuesday 1st - Friday 4th April, 2025<br>
+                                                                                            Mode:${mode} </p>
+                                                                                            <p>Please keep this receipt for your records.</p>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+    </html>`;
+    }
 };

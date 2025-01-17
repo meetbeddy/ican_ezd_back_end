@@ -7,7 +7,7 @@ fs = require("fs");
 dot.config();
 db();
 const setUp = async () => {
-	const cert = await Jimp.read("ezd-certificate.jpg");
+	const cert = await Jimp.read("no cert.jpg");
 	const origImageDim = { width: cert.bitmap.width, height: cert.bitmap.height };
 	cert
 		.resize((origImageDim.width * 51) / 100, (origImageDim.height * 51) / 100) // resize

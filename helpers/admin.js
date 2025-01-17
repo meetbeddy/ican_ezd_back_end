@@ -15,6 +15,7 @@ const aws = require("aws-sdk");
 const fs = require("fs");
 const { stat } = require("fs/promises");
 const { error } = require("console");
+const mailgun = require("./mailgun");
 
 s3 = new aws.S3({
 	credentials: {
@@ -207,55 +208,19 @@ module.exports = {
 
 			await invoice.save();
 
+			//TODO: send receipt via email
+			await mailgun.sendReceiptEmail(user.email, user.venue, invoice);
+
 			sms.sendOne(
 				user.phone,
-				`Dear ${user.name}, your payment for ICAN Eastern Zonal  Conference 2024 has been confirmed, please login to your profile to print your receipt. Thanks`
+				`Dear ${user.name}, your payment for ICAN Eastern Zonal  Conference 2025 has been confirmed, please login to your profile to print your receipt. Thanks`
 			);
-			await cert.sendAfterConfirmed(user);
+			// await cert.sendAfterConfirmed(user);
 
 			return user;
 		} catch (error) {
 			return error;
 		}
-		// return new Promise((resolve, reject) => {
-		//   User.findByIdAndUpdate(
-		//     { _id: id },
-		//     { confirmedPay ment: true },
-		//     { useFindAndModify: false }
-		//   )
-		//     .then((user) => {
-		//       if (!user) {
-		//         reject({ message: "No User Found" });
-		//         return;
-		//       }
-		//       const invoice = new Invoice({
-		//         user: user._id,
-		//         amount: user.amount,
-		//         invoiceId: new Date().getTime().toString().slice(5),
-		//         code: user.icanCode,
-		//         name: user.name,
-		//         email: user.email,
-		//         phone: user.phone,
-		//         gender: user.gender,
-		//         shirtSize: user.tshirtSize,
-		//         society: user.nameOfSociety,
-		//       });
-		//       invoice
-		//         .save()
-		//         .then(async (value) => {
-		//           sms.sendOne(
-		//             user.phone,
-		//             `Dear ${user.name}, your payment for ICAN Eastern Zonal  Conference 2024 has been confirmed, please login to your profile to print your receipt. Thanks`
-		//           );
-		//           await cert.sendAfterConfirmed(user);
-		//           resolve(user);
-		//         })
-		//         .catch((err) => reject(err));
-		//     })
-		//     .catch((err) => {
-		//       reject(err);
-		//     });
-		// });
 	},
 	deleteUser: function (id) {
 		return new Promise((resolve, reject) => {
@@ -316,6 +281,7 @@ module.exports = {
 				value.phone = value.phone.toString();
 				value.tellerDate = moment().format();
 				value.role = [{ name: value.role }];
+				value.gender = value.gender.toLowerCase();
 				value.confirm_password = value.password;
 				value.bulk = true;
 				return value;
@@ -391,7 +357,7 @@ module.exports = {
 	},
 	sendCertificate: async function () {
 		const total = await User.countDocuments({});
-		const page = 1;
+		const page = 3;
 		const LIMIT = 20;
 		const startIndex = (Number(page) - 1) * LIMIT; // get the starting index of every page
 

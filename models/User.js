@@ -51,16 +51,16 @@ const userSchema = mongooseSchema(
 				const memberStatus = this.memberStatus
 					? this.memberStatus.toLowerCase()
 					: "";
-				if (memberStatus === "nonmember" && venue === "physical") return 45000;
+				if (memberStatus === "nonmember" && venue === "physical") return 60000;
 				const memberCategory = this.memberCategory
 					? this.memberCategory.toLowerCase()
 					: "";
-				if (memberCategory === "half-paying member") return 20000;
+				if (memberCategory === "half-paying member") return 25000;
 				if (memberCategory === "full-paying member" && venue === "physical")
-					return 40000;
+					return 50000;
 				if (memberCategory === "young-accountants" && venue === "physical")
-					return 30000;
-				if (venue === "virtual") return 30000;
+					return 35000;
+				if (venue === "virtual") return 25000;
 
 				if (memberCategory === "admin" || memberCategory === "planning")
 					return 0;

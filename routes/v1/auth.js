@@ -11,10 +11,13 @@ const moment = require("moment");
 //Models
 const User = require("../../models/User");
 const Token = require("../../models/Token");
+const { upload } = require("../../configs/awsConfig");
 
 /* POST route creates a user. */
-router.post("/auth/signup", async (req, res, next) => {
+router.post("/auth/signup", upload.single("file"), async (req, res, next) => {
 	try {
+
+		console.log(req.file)
 		const { errors, isValid } = validation.register(req.body);
 		if (!isValid) {
 			// console.log(errors[Object.keys(errors)[0]]);
@@ -43,8 +46,15 @@ router.post("/auth/signup", async (req, res, next) => {
 			...req.body,
 			tellerDate: moment(req.body.tellerDate),
 			role: { name: "User" },
+			paymentProof: req.file ? req.file.location : null,
 		});
+
+
+
 		await newUser.save();
+
+
+
 		return res.status(201).json({
 			message: "User created sucessfully",
 			success: true,

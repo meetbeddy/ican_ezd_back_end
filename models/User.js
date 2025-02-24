@@ -60,7 +60,7 @@ const userSchema = mongooseSchema(
 					return 50000;
 				if (memberCategory === "young-accountants" && venue === "physical")
 					return 35000;
-				if (venue === "virtual") return 25000;
+				if (venue === "virtual") return 30000;
 
 				if (memberCategory === "admin" || memberCategory === "planning")
 					return 0;
@@ -107,6 +107,7 @@ const userSchema = mongooseSchema(
 			},
 		},
 		venue: { type: String, trim: true, required: true },
+		paymentProof: { type: String, trim: true },
 	},
 	{ timestamps: true }
 );

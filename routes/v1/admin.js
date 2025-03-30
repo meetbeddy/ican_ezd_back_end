@@ -119,6 +119,24 @@ router.get(
 			.catch((err) => res.status(400).json(err));
 	}
 );
+
+router.get(
+	"/receipts/verify/:id",
+	passport.authenticate("jwt", { session: false }),
+
+	async (req, res) => {
+		const { id } = req.params;
+		const jsonData = req.query.data ? JSON.parse(decodeURIComponent(req.query.data)) : null;
+
+		const result = await adminHelper.verifyReceipt(id, jsonData);
+
+		if (result.error) {
+			return res.status(400).json({ message: result.error });
+		}
+
+		res.json(result);
+	}
+);
 router.put(
 	"/user/activate",
 	passport.authenticate("jwt", { session: false }),

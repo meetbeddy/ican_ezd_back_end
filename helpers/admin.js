@@ -222,6 +222,34 @@ module.exports = {
 			return error;
 		}
 	},
+
+	verifyReceipt: async function (id, jsonData) {
+		try {
+
+			const invoice = await Invoice.findOne({ invoiceId: id });
+
+			if (!invoice) {
+				throw new Error("Receipt not found");
+			}
+
+
+			let verified = true;
+			if (jsonData) {
+
+				verified = invoice.invoiceId === jsonData.id &&
+					invoice.name === jsonData.name &&
+					invoice.email === jsonData.email;
+			}
+
+			return {
+				verified,
+				invoice
+			};
+
+		} catch (error) {
+			return { error: error.message };
+		}
+	},
 	deleteUser: function (id) {
 		return new Promise((resolve, reject) => {
 			User.findByIdAndDelete(id)

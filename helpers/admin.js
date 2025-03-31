@@ -252,16 +252,30 @@ module.exports = {
 	},
 	deleteUser: function (id) {
 		return new Promise((resolve, reject) => {
-			User.findByIdAndDelete(id)
-				.then((doc) => {
-					Invoice.findOneAndDelete({ user: doc._id })
-						.then((data) => { })
-						.catch((err) => err);
-					resolve(doc);
+			User.findById(id)
+				.then((user) => {
+					if (!user) {
+						return reject(new Error("User not found"));
+					}
+
+					// Prevent deletion of the admin account
+					if (user.email === "admin@admin.com") {
+						return reject(new Error("Admin account cannot be deleted"));
+					}
+
+					// Proceed with deletion
+					User.findByIdAndDelete(id)
+						.then((doc) => {
+							Invoice.findOneAndDelete({ user: doc._id })
+								.then(() => resolve(doc))
+								.catch((err) => reject(err));
+						})
+						.catch((err) => reject(err));
 				})
 				.catch((err) => reject(err));
 		});
 	},
+
 	updateUser: function (id, data) {
 		return new Promise((resolve, reject) => {
 			User.findOneAndUpdate(

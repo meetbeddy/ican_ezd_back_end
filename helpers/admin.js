@@ -354,28 +354,6 @@ module.exports = {
 		} catch (err) {
 			throw new Error(err);
 		}
-		// return new Promise((resolve, reject) => {
-
-		//   try {
-
-		//   } catch (e) {
-		//     return res.status(400).json(e.message);
-		//   }
-		// User.create(users)
-		//   .then((users) => {
-		//     users.forEach((user) => {
-		//       // sms.sendOne(user.phone, `Dear ${user.name}, You Have Successfully Registered for the 2022 ICAN Eastern Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `);
-		//       mail.sendMail(
-		//         user.email,
-		//         "SUCCESSFULL REGISTRATION",
-		//         email.register(user.name, user.email, user.password)
-		//       );
-		//     });
-		//     resolve(users);
-		//   })
-		//   .catch((err) => {
-		//     reject(err);
-		//   });
 	},
 	getUsersReceipts: function () {
 		return new Promise((resolve, reject) => {

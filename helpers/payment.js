@@ -3,8 +3,7 @@ const crypto = require("crypto");
 
 const REMITA_MERCHANT_ID = process.env.REMITA_MERCHANT_ID;
 const REMITA_SERVICE_TYPE_ID = process.env.REMITA_SERVICE_TYPE_ID;
-const REMITA_API_KEY = process.env.REMITA_API_KEY;  // consumerKey
-const REMITA_API_SECRET = process.env.REMITA_API_SECRET; // consumerToken (hash seed)
+const REMITA_API_KEY = process.env.REMITA_API_KEY;
 const REMITA_BASE_URL = "https://demo.remita.net";
 
 module.exports = {
@@ -22,11 +21,11 @@ module.exports = {
             throw new Error("Missing required payment fields");
         }
 
-        // Create the hash: SHA512(orderId + apiSecret + merchantId)
-        const stringToHash = orderId + REMITA_API_SECRET + REMITA_MERCHANT_ID;
-        const hash = crypto.createHash("sha512").update(stringToHash).digest("hex");
+        // Correct hash formula
+        const stringToHash = `${REMITA_MERCHANT_ID}${REMITA_SERVICE_TYPE_ID}${orderId}${amount}${REMITA_API_KEY}`;
+        const apiHash = crypto.createHash("sha512").update(stringToHash).digest("hex");
 
-        const url = `${REMITA_BASE_URL}/echannelsvc/merchant/api/paymentinit`;
+        const url = `${REMITA_BASE_URL}/remita/exapp/api/v1/send/api/echannelsvc/merchant/api/paymentinit`;
 
         const payload = {
             serviceTypeId: REMITA_SERVICE_TYPE_ID,
@@ -38,25 +37,32 @@ module.exports = {
             description
         };
 
-        // console.log(payload)
-        const apiHash = "ad2aca0d0555cdd3d7f35028d6a2c42acfdb57fb596acc83f099ab0b66414a1effb65658a1a337e33c18a52ca7ec0d5e1d1112576fde3db99db441eac2610847"
-
         const headers = {
             "Content-Type": "application/json",
             "Authorization": `remitaConsumerKey=${REMITA_MERCHANT_ID},remitaConsumerToken=${apiHash}`
         };
 
-
         const response = await axios.post(url, payload, { headers });
+        let raw = response.data;
 
-        // Remita returns JSONP like: jsonp({"statuscode":"025","RRR":"1107..."})
-        const raw = response.data;
+        // console.log("Raw Remita Response:", raw);
 
-        // Extract JSON from JSONP
-        const match = raw.match(/jsonp\((.*)\)/);
-        if (!match) throw new Error("Invalid Remita response format");
+        let data;
 
-        const data = JSON.parse(match[1]);
+        // If JSON object returned directly
+        if (typeof raw === "object") {
+            data = raw;
+        }
+        // If JSONP with optional whitespace e.g. jsonp ( {…} )
+        else if (typeof raw === "string") {
+            const match = raw.trim().match(/jsonp\s*\(\s*(.*)\s*\)/i);
+            if (!match) throw new Error("Invalid Remita response format");
+
+            data = JSON.parse(match[1]);
+        }
+        else {
+            throw new Error("Unknown Remita response type");
+        }
 
         if (data.statuscode !== "025") {
             throw new Error(data.status || "Failed to generate RRR");

@@ -20,4 +20,31 @@ router.post("/initialize", async (req, res) => {
     }
 });
 
+router.get("/verify/:rrr", async (req, res) => {
+    try {
+        const { rrr } = req.params;
+
+        if (!rrr) {
+            return res.status(400).json({
+                message: "RRR is required",
+                success: false,
+            });
+        }
+
+        const verificationResult = await paymentHelper.checkPaymentStatus(rrr);
+
+        return res.status(200).json({
+            message: "Payment verification complete",
+            success: true,
+            data: verificationResult,
+        });
+    } catch (err) {
+        return res.status(400).json({
+            message: err.message || "Something went wrong",
+            success: false,
+        });
+    }
+});
+
+
 module.exports = router;

@@ -73,5 +73,37 @@ module.exports = {
             status: data.status,
             statuscode: data.statuscode
         };
-    }
+    },
+
+    checkPaymentStatus: async (rrr) => {
+
+        const stringToHash = `${rrr}${REMITA_API_KEY}${REMITA_MERCHANT_ID}`;
+        const apiHash = crypto.createHash("sha512").update(stringToHash).digest("hex");
+
+        const url = `${REMITA_BASE_URL}/remita/exapp/api/v1/send/api/echannelsvc/${REMITA_MERCHANT_ID}/${rrr}/${apiHash}/status.reg`;
+
+        const headers = {
+            "Content-Type": "application/json",
+            "Authorization": `remitaConsumerKey=${REMITA_MERCHANT_ID},remitaConsumerToken=${apiHash}`
+        };
+
+        const response = await axios.get(url, { headers });
+        let raw = response.data;
+        let data;
+
+        if (typeof raw === "object") {
+            data = raw;
+        }
+        else if (typeof raw === "string") {
+            const match = raw.trim().match(/jsonp\s*\(\s*(.*)\s*\)/i);
+            if (!match) throw new Error("Invalid Remita response format");
+            data = JSON.parse(match[1]);
+        }
+        else {
+            throw new Error("Unknown Remita response type");
+        }
+
+        return data;
+    },
+
 };

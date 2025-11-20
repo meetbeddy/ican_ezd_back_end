@@ -1,14 +1,21 @@
 const mongoose = require("mongoose");
 const User = require("../models/User");
 const moment = require("moment");
+const bcrypt = require("bcryptjs/dist/bcrypt");
 
 const connect = async () => {
+  console.log("connecting to db...");
   try {
     mongoose.set("useCreateIndex", true);
     await mongoose.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const password = "admin-secret"
+    const hashedPassword = await bcrypt.hash(password, salt);
     User.findOne({ email: "admin@admin.com" }).then(async (user) => {
       if (!user) {
         try {
@@ -16,7 +23,7 @@ const connect = async () => {
             role: { name: "Admin" },
             name: "admin",
             email: "admin@admin.com",
-            password: "admin-secret",
+            password: hashedPassword,
             bankName: "Diamond Access",
             tellerNumber: "238987",
             tellerDate: moment(),

@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const validation = require("../validation/general-validation");
 const mail = require("../helpers/mailgun");
 const template = require("../helpers/email.template");
+const paymentHelper = require("../helpers/payment");
 const moment = require("moment");
 const User = require("../models/User");
 const PRICE_CONFIG = require("../configs/priceConfig");
@@ -36,7 +37,9 @@ module.exports = {
 
             // Compute fields
             const amount = this.calculateAmount(userData);
-            const confirmedPayment = this.isConfirmedPayment(userData.memberCategory);
+            const confirmedPayment = await this.isConfirmedPayment(userData.memberCategory, userData.tellerNumber);
+
+            console.log("confirmedPayment", confirmedPayment);
 
             // Hash password
             const salt = await bcrypt.genSalt(10);
@@ -100,7 +103,36 @@ module.exports = {
         return undefined;
     },
 
-    isConfirmedPayment: function (memberCategory) {
-        return ["admin", "planning"].includes(memberCategory?.toLowerCase());
+    isConfirmedPayment: async function (memberCategory, reference) {
+        const category = memberCategory?.toLowerCase();
+
+        // Auto-confirm for special categories
+        if (["admin", "planning"].includes(category)) {
+            return true;
+        }
+
+        // For all others, verify RRR—but don’t allow errors to break registration
+        if (!reference) return false;
+
+        try {
+            const result = await paymentHelper.checkPaymentStatus(reference);
+
+            console.log("result", result)
+
+            if (
+                result &&
+                (result.status === "00" ||
+                    result.status === "01" ||
+                    result.message?.toLowerCase().includes("success"))
+            ) {
+                return true;
+            }
+
+            return false;
+        } catch (err) {
+            console.log("RRR verification error:", err.message);
+            return false;
+        }
     },
+
 };

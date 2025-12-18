@@ -80,27 +80,68 @@ module.exports = {
         }
     },
 
+    /**
+     * Check if registration qualifies for early bird discount
+     * Returns true if current date is on or before December 31, 2025
+     */
+    isEarlyBirdEligible: function () {
+        const now = moment();
+        const deadline = moment("2025-12-31").endOf("day");
+        return now.isSameOrBefore(deadline);
+    },
+
+    /**
+     * Apply early bird discount to amount
+     * Returns discounted amount if eligible, otherwise returns original amount
+     */
+    applyEarlyBirdDiscount: function (baseAmount) {
+        if (!baseAmount || baseAmount <= 0) return baseAmount;
+
+        const isEligible = this.isEarlyBirdEligible();
+        if (!isEligible) return baseAmount;
+
+        // Apply 5% discount
+        const discountPercentage = 0.05;
+        const discountedAmount = Math.round(baseAmount * (1 - discountPercentage));
+
+        console.log(`Early bird discount applied: ₦${baseAmount} -> ₦${discountedAmount} (saved ₦${baseAmount - discountedAmount})`);
+
+        return discountedAmount;
+    },
+
     calculateAmount: function ({ venue, memberStatus, memberCategory }) {
         venue = venue?.toLowerCase();
         memberStatus = memberStatus?.toLowerCase();
         memberCategory = memberCategory?.toLowerCase();
 
+        let baseAmount;
+
+        // Check special categories first
         if (PRICE_CONFIG.special[memberCategory] !== undefined) {
-            return PRICE_CONFIG.special[memberCategory];
+            baseAmount = PRICE_CONFIG.special[memberCategory];
+        }
+        // Check physical venue pricing
+        else if (venue === "physical") {
+            if (PRICE_CONFIG.physical[memberCategory]) {
+                baseAmount = PRICE_CONFIG.physical[memberCategory];
+            } else if (PRICE_CONFIG.physical[memberStatus]) {
+                baseAmount = PRICE_CONFIG.physical[memberStatus];
+            }
+        }
+        // Check virtual venue pricing
+        else if (venue === "virtual") {
+            baseAmount = PRICE_CONFIG.virtual.default;
         }
 
-        if (venue === "physical") {
-            if (PRICE_CONFIG.physical[memberCategory])
-                return PRICE_CONFIG.physical[memberCategory];
-            if (PRICE_CONFIG.physical[memberStatus])
-                return PRICE_CONFIG.physical[memberStatus];
+        // If no base amount found, return undefined
+        if (baseAmount === undefined) {
+            return undefined;
         }
 
-        if (venue === "virtual") {
-            return PRICE_CONFIG.virtual.default;
-        }
+        // Apply early bird discount if eligible
+        const finalAmount = this.applyEarlyBirdDiscount(baseAmount);
 
-        return undefined;
+        return finalAmount;
     },
 
     isConfirmedPayment: async function (memberCategory, reference) {
@@ -111,13 +152,13 @@ module.exports = {
             return true;
         }
 
-        // For all others, verify RRR—but don’t allow errors to break registration
+        // For all others, verify RRR—but don't allow errors to break registration
         if (!reference) return false;
 
         try {
             const result = await paymentHelper.checkPaymentStatus(reference);
 
-            console.log("result", result)
+            console.log("result", result);
 
             if (
                 result &&

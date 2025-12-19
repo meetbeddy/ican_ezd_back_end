@@ -336,7 +336,7 @@ module.exports = {
 
                 <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 16px; border-radius: 8px; margin: 24px 0;">
                     <p style="margin: 0; color: #991b1b; font-size: 14px;">
-                        <strong>⚠️ Security Tip:</strong> Never share your password with anyone. ICAN will never ask for your password via email.
+                        <strong>⚠️ Security Tip:</strong> Never share your password with anyone. ICANEZD will never ask for your password via email.
                     </p>
                 </div>
 
@@ -497,15 +497,7 @@ module.exports = {
                     </p>
                 </div>
 
-                <div style="background-color: #f0fdf4; border-left: 4px solid #10b981; padding: 20px; border-radius: 8px; margin: 24px 0;">
-                    <h4 style="margin-top: 0; color: #065f46;">🌟 What's Next?</h4>
-                    <ul style="margin: 8px 0 0 0; padding-left: 20px; color: #047857;">
-                        <li>Add this certificate to your professional portfolio</li>
-                        <li>Share your achievement on LinkedIn</li>
-                        <li>Stay connected with fellow attendees</li>
-                        <li>Watch for announcements about next year's conference</li>
-                    </ul>
-                </div>
+
 
                 <p class="text">
                     We hope you found the conference valuable and enriching. Your feedback is important to us, 
@@ -519,7 +511,7 @@ module.exports = {
                 </div>
 
                 <p class="text" style="margin-top: 32px;">
-                    Once again, congratulations on completing the ICAN Eastern Zonal Conference 2025!
+                    Once again, congratulations on completing the ICAN Eastern Zonal Conference 2026!
                 </p>
 
                 <p class="text">

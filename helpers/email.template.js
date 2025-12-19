@@ -1,848 +1,534 @@
 module.exports = {
-    header: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-    <html>
-    
+    header: `<!DOCTYPE html>
+    <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta content="width=device-width, initial-scale=1" name="viewport">
-        <meta name="x-apple-disable-message-reformatting">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta content="telephone=no" name="format-detection">
-        <title></title>
-        <!--[if (mso 16)]>
-        <style type="text/css">
-        a {text-decoration: none;}
+        <title>ICAN Eastern Conference</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+            
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                background-color: #f5f7fa;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            .email-container {
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #ffffff;
+            }
+            .header {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 40px 20px;
+                text-align: center;
+            }
+            .header img {
+                max-width: 100px;
+                height: auto;
+            }
+            .content {
+                padding: 40px 30px;
+            }
+            .greeting {
+                font-size: 24px;
+                font-weight: 700;
+                color: #1a202c;
+                margin-bottom: 16px;
+            }
+            .text {
+                font-size: 16px;
+                line-height: 1.6;
+                color: #4a5568;
+                margin-bottom: 16px;
+            }
+            .highlight-box {
+                background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+                border-left: 4px solid #667eea;
+                padding: 20px;
+                margin: 24px 0;
+                border-radius: 8px;
+            }
+            .discount-banner {
+                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                color: white;
+                padding: 16px 20px;
+                border-radius: 8px;
+                margin: 24px 0;
+                text-align: center;
+            }
+            .discount-banner h3 {
+                margin: 0 0 8px 0;
+                font-size: 20px;
+                font-weight: 700;
+            }
+            .discount-banner p {
+                margin: 0;
+                font-size: 14px;
+                opacity: 0.95;
+            }
+            .info-card {
+                background-color: #ffffff;
+                border: 2px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 24px;
+                margin: 24px 0;
+            }
+            .info-row {
+                display: flex;
+                justify-content: space-between;
+                padding: 12px 0;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            .info-row:last-child {
+                border-bottom: none;
+            }
+            .info-label {
+                font-weight: 600;
+                color: #4a5568;
+            }
+            .info-value {
+                color: #1a202c;
+                font-weight: 500;
+            }
+            .button {
+                display: inline-block;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: #ffffff !important;
+                text-decoration: none;
+                padding: 16px 32px;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 16px;
+                margin: 24px 0;
+                box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
+                transition: transform 0.2s;
+            }
+            .button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+            }
+            .conference-details {
+                background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+                padding: 20px;
+                border-radius: 8px;
+                margin: 24px 0;
+                text-align: center;
+            }
+            .conference-details h4 {
+                margin: 0 0 12px 0;
+                color: #92400e;
+                font-size: 18px;
+            }
+            .conference-details p {
+                margin: 4px 0;
+                color: #78350f;
+                font-weight: 500;
+            }
+            .footer {
+                background-color: #1a202c;
+                color: #a0aec0;
+                padding: 32px 30px;
+                text-align: center;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+            .footer a {
+                color: #667eea;
+                text-decoration: none;
+            }
+            .social-links {
+                margin: 20px 0;
+            }
+            .social-links a {
+                display: inline-block;
+                margin: 0 8px;
+                color: #a0aec0;
+                text-decoration: none;
+            }
+            @media only screen and (max-width: 600px) {
+                .content {
+                    padding: 24px 20px;
+                }
+                .greeting {
+                    font-size: 20px;
+                }
+                .info-row {
+                    flex-direction: column;
+                }
+                .info-value {
+                    margin-top: 4px;
+                }
+            }
         </style>
-        <![endif]-->
-        <!--[if gte mso 9]><style>sup { font-size: 100% !important; }</style><![endif]-->
-        <!--[if !mso]><!-- -->
-        <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i" rel="stylesheet">
-        <!--<![endif]-->
-    </head>`,
-    register: function (name, email, password) {
-        return `
-    ${this.header}
+    </head>
+    <body>`,
 
-<body>
-    <div class="es-wrapper-color">
-        <!--[if gte mso 9]>
-			<v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
-				<v:fill type="tile" color="#ffffff"></v:fill>
-			</v:background>
-		<![endif]-->
-        <table class="es-wrapper" style="background-position: center top;" width="100%" cellspacing="0" cellpadding="0">
-            <tbody>
-                <tr>
-                    <td class="esd-email-paddings" valign="top">
-                        <table class="es-content esd-header-popover" cellspacing="0" cellpadding="0" align="center">
-                            <tbody>
-                                <tr>
-                                    <td class="esd-stripe" align="center">
-                                        <table class="es-content-body" style="background-color: transparent;" width="600" cellspacing="0" cellpadding="0" align="center">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="esd-structure" align="left">
-                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="esd-container-frame" width="600" valign="top" align="center">
-                                                                        <table style="border-radius: 3px; border-collapse: separate; background-color: #fcfcfc;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#fcfcfc">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-text es-m-txt-l es-p30t es-p20r es-p20l" align="left">
-                                                                                        <h2 style="color: #333333;">Welcome!</h2>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td class="esd-block-text es-p10t es-p20r es-p20l" bgcolor="#fcfcfc" align="left">
-                                                                                        <p>Hi ${name}, you have successfully registered for the upcoming ICAN Eastern Conference slated for Tuesday 1st - Friday 4th April, 2025. The Conference Will Now Hold Virtually and Physically.</p>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="esd-structure es-p30t es-p20r es-p20l" style="background-color: #fcfcfc;" esd-custom-block-id="15791" bgcolor="#fcfcfc" align="left">
-                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="esd-container-frame" width="560" valign="top" align="center">
-                                                                        <table style="border-color: #efefef; border-style: solid; border-width: 1px; border-radius: 3px; border-collapse: separate; background-color: #ffffff;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-text es-p20t es-p15b" align="center">
-                                                                                        <h3 style="color: #333333;">Your account information:</h3>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td class="esd-block-text" align="center">
-                                                                                        <p style="color: #64434a; font-size: 16px; line-height: 150%;">Username: ${email}</p>
-                                                                                        <p style="color: #64434a; font-size: 16px; line-height: 150%;">Password: ${password}</p>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td class="esd-block-button es-p20t es-p20b es-p10r es-p10l" align="center"><span class="es-button-border" style="background: #23395d;"><a href="https://www.icanezdconference.org.ng/login" class="es-button" target="_blank" style="background: #23395d; border-color: #23395d; color: #ffffff;">Log In Now</a></span></td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table class="es-content" cellspacing="0" cellpadding="0" align="center">
-                            <tbody>
-                                <tr>
-                                    <td class="esd-stripe" align="center">
-                                        <table class="es-content-body" style="background-color: #fcfcfc;" width="600" cellspacing="0" cellpadding="0" bgcolor="#fcfcfc" align="center">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="esd-structure es-p40t es-p25b es-p20r es-p20l" esd-custom-block-id="15790" align="left">
-                                                        <!--[if mso]><table width="560" cellpadding="0" 
-                            cellspacing="0"><tr><td width="274" valign="top"><![endif]-->
-                                                        <table class="es-left" cellspacing="0" cellpadding="0" align="left">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="es-m-p0r es-m-p20b esd-container-frame" width="254" align="center">
-                                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-text" align="left">
-                                                                                        <h3 style="font-size: 17px;">Download the app for ease of operations</h3>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                    <td class="es-hidden" width="20"></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        <!--[if mso]></td><td width="133" valign="top"><![endif]-->
-                                                        <table class="es-left" cellspacing="0" cellpadding="0" align="left">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="es-m-p20b esd-container-frame" width="133" align="center">
-                                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-image" align="center"><a target="_blank" href="https://viewstripo.email/"><img src="https://tlr.stripocdn.email/content/guids/CABINET_e48ed8a1cdc6a86a71047ec89b3eabf6/images/92051534250512328.png" alt="App Store" style="display: block;" class="adapt-img" title="App Store" width="133"></a></td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        <!--[if mso]></td><td width="20"></td><td width="133" valign="top"><![endif]-->
-                                                        <table class="es-right" cellspacing="0" cellpadding="0" align="right">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="esd-container-frame" width="133" align="center">
-                                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-image" align="center"><a target="_blank" href="https://viewstripo.email/"><img class="adapt-img" src="https://tlr.stripocdn.email/content/guids/CABINET_e48ed8a1cdc6a86a71047ec89b3eabf6/images/82871534250557673.png" alt="Google Play" style="display: block;" title="Google Play" width="133"></a></td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        <!--[if mso]></td></tr></table><![endif]-->
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table class="es-content" cellspacing="0" cellpadding="0" align="center">
-                            <tbody>
-                                <tr>
-                                    <td class="esd-stripe" style="background-color: #666666;" esd-custom-block-id="15624" bgcolor="#666666" align="center">
-                                        <table class="es-content-body" style="background-color: transparent;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="esd-structure" align="left">
-                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="esd-container-frame" width="600" valign="top" align="center">
-                                                                        <table style="background-color: #fff4f7; border-radius: 3px; border-collapse: separate;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#fff4f7">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-spacer es-p5t es-p5b es-p20r es-p20l" bgcolor="#fff4f7" align="center">
-                                                                                        <table width="100%" height="100%" cellspacing="0" cellpadding="0" border="0">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td style="border-bottom: 1px solid #fff4f7; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%; height: 1px; width: 100%; margin: 0px;"></td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table cellpadding="0" cellspacing="0" class="es-footer" align="center">
-                            <tbody>
-                                <tr>
-                                <td class="esd-stripe" style="background-color: #666666;" esd-custom-block-id="15625" bgcolor="#666666" align="center">
-                                <table class="es-footer-body" style="background-color: #666666;" width="600" cellspacing="0" cellpadding="0" bgcolor="#666666" align="center">
-                                    <tbody>
-                                        <tr>
-                                            <td class="esd-structure es-p20t es-p20b es-p20r es-p20l" align="left">
-                                                <table width="100%" cellspacing="0" cellpadding="0">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="esd-container-frame" width="560" valign="top" align="center">
-                                                                <table width="100%" cellspacing="0" cellpadding="0">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td esdev-links-color="#999999" class="esd-block-text" align="center">
-                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2025.</p>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td esdev-links-color="#999999" class="esd-block-text es-p5b" align="center">
-                                                                                <p style="color: #ffffff;">Tuesday 1st - Friday 4th April, 2025, Virtually</p>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table class="esd-footer-popover es-content" cellspacing="0" cellpadding="0" align="center">
-                            <tbody>
-                                <tr>
-                                    <td class="esd-stripe" style="background-color: #666666;" bgcolor="#666666" align="center">
-                                        <table class="es-content-body" style="background-color: #666666;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="esd-structure es-p30t es-p30b es-p20r es-p20l" align="left">
-                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="esd-container-frame" width="560" valign="top" align="center">
-                                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-image es-infoblock made_with" align="center"><a target="_blank" href="https://www.icanezdconference.org.ng/"><img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt style="display: block; width: 115px; height: 143px;" height="143"></a></td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
+    footer: `
+        <table class="footer" width="100%" cellspacing="0" cellpadding="0">
+            <tr>
+                <td align="center">
+                    <img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt="ICAN Logo" style="max-width: 80px; margin-bottom: 16px;">
+                    <p style="margin: 12px 0;">Institute of Chartered Accountants of Nigeria</p>
+                    <p style="margin: 12px 0;">Eastern Zonal District Conference 2025</p>
+                    <p style="margin: 12px 0; font-size: 13px;">
+                        You're receiving this email because you registered for the ICAN Eastern Zonal Conference.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://www.icanezdconference.org.ng">Visit Website</a> | 
+                        <a href="mailto:info@icanezdconference.org.ng">Contact Us</a>
+                    </div>
+                    <p style="margin-top: 20px; font-size: 12px; color: #718096;">
+                        © 2025 ICAN Eastern Zonal District. All rights reserved.
+                    </p>
+                </td>
+            </tr>
         </table>
-    </div>
-</body>
+    </body>
+    </html>`,
 
-</html>`;
+    register: function (name, email, password, amount, hasDiscount = false, discountAmount = 0) {
+        const originalAmount = hasDiscount ? amount + discountAmount : amount;
+
+        return `
+        ${this.header}
+        <div class="email-container">
+            <div class="header">
+                <img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt="ICAN Logo">
+                <h1 style="color: white; margin: 16px 0 0 0; font-size: 28px;">Welcome to ICAN 2025!</h1>
+            </div>
+
+            <div class="content">
+                <h2 class="greeting">🎉 Registration Successful!</h2>
+                
+                <p class="text">
+                    Hi <strong>${name}</strong>,
+                </p>
+                
+                <p class="text">
+                    Congratulations! You've successfully registered for the <strong>ICAN Eastern Zonal Conference 2025</strong>. 
+                    We're excited to have you join us for this transformative experience.
+                </p>
+
+                ${hasDiscount ? `
+                <div class="discount-banner">
+                    <h3>🎁 Early Bird Discount Applied!</h3>
+                    <p>You saved ₦${discountAmount.toLocaleString()} by registering early</p>
+                </div>
+                ` : ''}
+
+                <div class="conference-details">
+                    <h4>📅 Conference Details</h4>
+                    <p><strong>Date:</strong> Tuesday 1st - Friday 4th April, 2025</p>
+                    <p><strong>Mode:</strong> Virtual & Physical Attendance Available</p>
+                    <p><strong>Theme:</strong> Innovation & Excellence in Accounting</p>
+                </div>
+
+                <div class="info-card">
+                    <h3 style="margin-top: 0; color: #1a202c; font-size: 18px;">🔐 Your Login Credentials</h3>
+                    <div class="info-row">
+                        <span class="info-label">Username:</span>
+                        <span class="info-value">${email}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Password:</span>
+                        <span class="info-value">${password}</span>
+                    </div>
+                    ${hasDiscount ? `
+                    <div class="info-row">
+                        <span class="info-label">Original Price:</span>
+                        <span class="info-value" style="text-decoration: line-through; color: #718096;">₦${originalAmount.toLocaleString()}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Discount (5%):</span>
+                        <span class="info-value" style="color: #10b981;">-₦${discountAmount.toLocaleString()}</span>
+                    </div>
+                    ` : ''}
+                    <div class="info-row">
+                        <span class="info-label">${hasDiscount ? 'Final Amount:' : 'Amount Paid:'}</span>
+                        <span class="info-value" style="color: #667eea; font-size: 18px;">₦${amount.toLocaleString()}</span>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="https://www.icanezdconference.org.ng/login" class="button">
+                        Access Your Account
+                    </a>
+                </div>
+
+                <div class="highlight-box">
+                    <h4 style="margin-top: 0; color: #1a202c;">📱 Download Our Mobile App</h4>
+                    <p style="color: #4a5568; margin-bottom: 12px;">
+                        Get the best conference experience with our mobile app. Access schedules, network with attendees, and stay updated.
+                    </p>
+                    <div style="display: flex; gap: 12px; justify-content: center; margin-top: 16px;">
+                        <a href="#" style="display: inline-block;">
+                            <img src="https://tlr.stripocdn.email/content/guids/CABINET_e48ed8a1cdc6a86a71047ec89b3eabf6/images/92051534250512328.png" 
+                                 alt="App Store" style="height: 40px;">
+                        </a>
+                        <a href="#" style="display: inline-block;">
+                            <img src="https://tlr.stripocdn.email/content/guids/CABINET_e48ed8a1cdc6a86a71047ec89b3eabf6/images/82871534250557673.png" 
+                                 alt="Google Play" style="height: 40px;">
+                        </a>
+                    </div>
+                </div>
+
+                <p class="text">
+                    If you have any questions or need assistance, please don't hesitate to reach out to our support team.
+                </p>
+
+                <p class="text">
+                    We look forward to seeing you at the conference!
+                </p>
+
+                <p class="text" style="margin-top: 32px;">
+                    <strong>Best regards,</strong><br>
+                    ICAN Eastern Zonal Conference Team
+                </p>
+            </div>
+
+            ${this.footer}
+        </div>`;
     },
+
+    forgotPassword: function (name, email, link) {
+        return `
+        ${this.header}
+        <div class="email-container">
+            <div class="header">
+                <img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt="ICAN Logo">
+                <h1 style="color: white; margin: 16px 0 0 0; font-size: 28px;">Password Reset</h1>
+            </div>
+
+            <div class="content">
+                <h2 class="greeting">🔐 Reset Your Password</h2>
+                
+                <p class="text">
+                    Hi <strong>${name}</strong>,
+                </p>
+                
+                <p class="text">
+                    We received a request to reset your password for your ICAN Conference account. 
+                    If you didn't make this request, you can safely ignore this email.
+                </p>
+
+                <div class="highlight-box">
+                    <h4 style="margin-top: 0; color: #1a202c;">⏰ Quick Action Required</h4>
+                    <p style="color: #4a5568; margin: 0;">
+                        This password reset link will expire in <strong>1 hour</strong> for security reasons.
+                    </p>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="${link}" class="button">
+                        Reset Your Password
+                    </a>
+                </div>
+
+                <p class="text" style="font-size: 14px; color: #718096;">
+                    If the button doesn't work, copy and paste this link into your browser:<br>
+                    <a href="${link}" style="color: #667eea; word-break: break-all;">${link}</a>
+                </p>
+
+                <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 16px; border-radius: 8px; margin: 24px 0;">
+                    <p style="margin: 0; color: #991b1b; font-size: 14px;">
+                        <strong>⚠️ Security Tip:</strong> Never share your password with anyone. ICAN will never ask for your password via email.
+                    </p>
+                </div>
+
+                <p class="text">
+                    If you continue to have issues accessing your account, please contact our support team for assistance.
+                </p>
+
+                <p class="text" style="margin-top: 32px;">
+                    <strong>Best regards,</strong><br>
+                    ICAN Eastern Zonal Conference Team
+                </p>
+            </div>
+
+            ${this.footer}
+        </div>`;
+    },
+
+    sendReceipt: function (name, mode, invoiceData, hasDiscount = false, discountAmount = 0) {
+        const originalAmount = hasDiscount ? invoiceData.amount + discountAmount : invoiceData.amount;
+
+        return `
+        ${this.header}
+        <div class="email-container">
+            <div class="header">
+                <img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt="ICAN Logo">
+                <h1 style="color: white; margin: 16px 0 0 0; font-size: 28px;">Payment Receipt</h1>
+            </div>
+
+            <div class="content">
+                <h2 class="greeting">✅ Payment Confirmed</h2>
+                
+                <p class="text">
+                    Dear <strong>${name}</strong>,
+                </p>
+                
+                <p class="text">
+                    Thank you for your payment! Your registration for the ICAN Eastern Zonal Conference 2025 is now complete.
+                </p>
+
+                ${hasDiscount ? `
+                <div class="discount-banner">
+                    <h3>🎁 Early Bird Discount Applied</h3>
+                    <p>You saved ₦${discountAmount.toLocaleString()} by registering before December 31st</p>
+                </div>
+                ` : ''}
+
+                <div class="info-card">
+                    <h3 style="margin-top: 0; color: #1a202c; font-size: 18px;">💳 Transaction Details</h3>
+                    <div class="info-row">
+                        <span class="info-label">Invoice Number:</span>
+                        <span class="info-value">${invoiceData.invoiceId}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">ICAN Code:</span>
+                        <span class="info-value">${invoiceData.code}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Payment Date:</span>
+                        <span class="info-value">${new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        })}</span>
+                    </div>
+                    ${hasDiscount ? `
+                    <div class="info-row">
+                        <span class="info-label">Original Amount:</span>
+                        <span class="info-value" style="text-decoration: line-through; color: #718096;">₦${originalAmount.toLocaleString()}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Discount (5%):</span>
+                        <span class="info-value" style="color: #10b981;">-₦${discountAmount.toLocaleString()}</span>
+                    </div>
+                    ` : ''}
+                    <div class="info-row" style="background-color: #f7fafc; margin: 12px -24px -24px -24px; padding: 16px 24px; border-radius: 0 0 12px 12px;">
+                        <span class="info-label" style="font-size: 18px;">Amount Paid:</span>
+                        <span class="info-value" style="font-size: 24px; color: #667eea;">₦${invoiceData.amount.toLocaleString()}</span>
+                    </div>
+                </div>
+
+                <div class="conference-details">
+                    <h4>📅 Your Conference Registration</h4>
+                    <p><strong>Date:</strong> Tuesday 1st - Friday 4th April, 2025</p>
+                    <p><strong>Attendance Mode:</strong> ${mode}</p>
+                    <p><strong>Status:</strong> <span style="color: #059669; font-weight: 700;">CONFIRMED ✓</span></p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4 style="margin-top: 0; color: #1a202c;">📄 Important Information</h4>
+                    <ul style="margin: 0; padding-left: 20px; color: #4a5568;">
+                        <li>Please keep this receipt for your records</li>
+                        <li>Your conference badge will be available for pickup at registration</li>
+                        <li>Check your email for pre-conference materials and schedule</li>
+                        <li>Download the mobile app for real-time updates</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="https://www.icanezdconference.org.ng/login" class="button">
+                        View Your Dashboard
+                    </a>
+                </div>
+
+                <p class="text">
+                    We're excited to have you join us! If you have any questions about your registration or the conference, 
+                    please don't hesitate to contact our support team.
+                </p>
+
+                <p class="text" style="margin-top: 32px;">
+                    <strong>See you at the conference!</strong><br>
+                    ICAN Eastern Zonal Conference Team
+                </p>
+            </div>
+
+            ${this.footer}
+        </div>`;
+    },
+
     sendCert: function (name) {
-        return `${this.header}
-        <body>
-        <div class="es-wrapper-color">
-            <!--[if gte mso 9]>
-                <v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
-                    <v:fill type="tile" src="https://stripo.email/content/guids/CABINET_63fbbc11db6741389cc3292b09a63e6d/images/7711511856111535.png" color="#f6f6f6" origin="0.5, 0" position="0.5,0"></v:fill>
-                </v:background>
-            <![endif]-->
-            <table class="es-wrapper" width="100%" cellspacing="0" cellpadding="0" background="https://stripo.email/content/guids/CABINET_63fbbc11db6741389cc3292b09a63e6d/images/7711511856111535.png" style="background-position: center top;">
-                <tbody>
-                    <tr>
-                        <td class="esd-email-paddings" valign="top">
-                            <table class="es-content esd-header-popover" cellspacing="0" cellpadding="0" align="center">
-                                <tbody>
-                                    <tr>
-                                        <td class="esd-stripe" esd-custom-block-id="4044" align="center">
-                                            <table class="es-content-body" style="background-color: #ffffff;" width="600" cellspacing="0" cellpadding="0" bgcolor="#333333" align="center">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="esd-structure" style="background-color: #f3f3f3;" bgcolor="#f3f3f3" align="left">
-                                                            <table width="100%" cellspacing="0" cellpadding="0">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td class="esd-container-frame" width="600" valign="top" align="center">
-                                                                            <table width="100%" cellspacing="0" cellpadding="0">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td class="esd-block-text es-p30t es-p15b es-p15r es-p15l" align="center">
-                                                                                            <h1 style="font-size: 38px;">THANK YOU FOR ATTENDING</h1>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td class="esd-block-image es-p15b" align="center" style="font-size:0"><a target="_blank"><img class="adapt-img" src="https://tlr.stripocdn.email/content/guids/CABINET_63fbbc11db6741389cc3292b09a63e6d/images/63541516368770627.png" alt="Handshake" title="Handshake" width="600"></a></td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="esd-structure es-p20t es-p10b es-p30r es-p30l" esd-general-paddings-checked="true" align="left">
-                                                            <table width="100%" cellspacing="0" cellpadding="0">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td class="esd-container-frame" width="540" valign="top" align="center">
-                                                                            <table width="100%" cellspacing="0" cellpadding="0">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td class="esd-block-text es-p15t" align="left">
-                                                                                            <h3 style="line-height: 120%;">Dear ${name},</h3>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td class="esd-block-text es-m-txt-c es-p10t es-p10b" align="left">
-                                                                                            <p style="line-height: 150%;">Thank you for attending the 2025 ICAN Eastern ZONAL CONFERENCE.</p>
-                                                                                            <p style="color: red; font-style: italic;text-align: center;">
-                                                                                              Click Download to Download the IMAGE
-                                                                                            </p>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="esd-structure es-p10b es-p30r es-p30l" esd-general-paddings-checked="true" align="left">
-                                                            <table width="100%" cellspacing="0" cellpadding="0">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td class="esd-container-frame" width="540" valign="top" align="center">
-                                                                            <table width="100%" cellspacing="0" cellpadding="0">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td class="esd-block-text es-m-txt-c" align="left">
-                                                                                            <h3 style="line-height: 150%;">Below is your certificate of participation:</h3>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="esd-structure es-p20t es-p20b es-p30r es-p30l" align="left">
-                                                            <table cellpadding="0" cellspacing="0" width="100%">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td width="540" class="esd-container-frame" align="center" valign="top">
-                                                                            <table cellpadding="0" cellspacing="0" width="100%">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank"><img class="adapt-img" src="cid:cert" alt="CERTIFICATE" style="display: block;" width="540"></a></td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="esd-structure es-p20t es-p20b es-p30r es-p30l" align="left">
-                                                            <table cellpadding="0" cellspacing="0" width="100%">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td width="540" class="esd-container-frame" align="center" valign="top">
-                                                                            
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table cellpadding="0" cellspacing="0" class="es-footer esd-footer-popover" align="center">
-                                <tbody>
-                                    <tr>
-                                        <td class="esd-stripe" esd-custom-block-id="4061" align="center">
-                                            <table class="es-footer-body" width="600" cellspacing="0" cellpadding="0" align="center">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="esd-structure es-p20t es-p20b es-p30r es-p30l" align="left">
-                                                            <table cellpadding="0" cellspacing="0" width="100%">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td width="540" class="esd-container-frame" align="center" valign="top">
-                                                                            <table cellpadding="0" cellspacing="0" width="100%">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank" href="https://www.icanezdconference.org.ng/"><img class="adapt-img" src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt style="display: block;" width="72"></a></td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </body>
-        `;
-    },
-
-    forgotpassword: function (name, email, link) {
         return `
-    ${this.header}
+        ${this.header}
+        <div class="email-container">
+            <div class="header">
+                <img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt="ICAN Logo">
+                <h1 style="color: white; margin: 16px 0 0 0; font-size: 28px;">Certificate of Participation</h1>
+            </div>
 
-<body>
-    <div class="es-wrapper-color">
-        <!--[if gte mso 9]>
-			<v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
-				<v:fill type="tile" color="#ffffff"></v:fill>
-			</v:background>
-		<![endif]-->
-        <table class="es-wrapper" style="background-position: center top;" width="100%" cellspacing="0" cellpadding="0">
-            <tbody>
-                <tr>
-                    <td class="esd-email-paddings" valign="top">
-                        <table class="es-content esd-header-popover" cellspacing="0" cellpadding="0" align="center">
-                            <tbody>
-                                <tr>
-                                    <td class="esd-stripe" align="center">
-                                        <table class="es-content-body" style="background-color: transparent;" width="600" cellspacing="0" cellpadding="0" align="center">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="esd-structure" align="left">
-                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="esd-container-frame" width="600" valign="top" align="center">
-                                                                        <table style="border-radius: 3px; border-collapse: separate; background-color: #fcfcfc;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#fcfcfc">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-text es-m-txt-l es-p30t es-p20r es-p20l" align="left">
-                                                                                        <h2 style="color: #333333;">Welcome!</h2>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td class="esd-block-text es-p10t es-p20r es-p20l" bgcolor="#fcfcfc" align="left">
-                                                                                        <p>Hi ${name}, you requested a password reset</p>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="esd-structure es-p30t es-p20r es-p20l" style="background-color: #fcfcfc;" esd-custom-block-id="15791" bgcolor="#fcfcfc" align="left">
-                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="esd-container-frame" width="560" valign="top" align="center">
-                                                                        <table style="border-color: #efefef; border-style: solid; border-width: 1px; border-radius: 3px; border-collapse: separate; background-color: #ffffff;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-text es-p20t es-p15b" align="center">
-                                                                                        <h3 style="color: #333333;">click the button below to reset your password</h3>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td class="esd-block-text" align="center">
-                                                                                        <p style="color: #64434a; font-size: 16px; line-height: 150%;">link expires in an hour</p>
-                                                                                        
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td class="esd-block-button es-p20t es-p20b es-p10r es-p10l" align="center"><span class="es-button-border" style="background: #23395d;"><a href=${link} class="es-button" target="_blank" style="background: #23395d; border-color: #23395d; color: #ffffff;">Reset Password Now</a></span></td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table class="es-content" cellspacing="0" cellpadding="0" align="center">
-                            <tbody>
-                                <tr>
-                                    <td class="esd-stripe" align="center">
-                                        <table class="es-content-body" style="background-color: #fcfcfc;" width="600" cellspacing="0" cellpadding="0" bgcolor="#fcfcfc" align="center">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="esd-structure es-p40t es-p25b es-p20r es-p20l" esd-custom-block-id="15790" align="left">
-                                                        <!--[if mso]><table width="560" cellpadding="0" 
-                            cellspacing="0"><tr><td width="274" valign="top"><![endif]-->
-                                                        <table class="es-left" cellspacing="0" cellpadding="0" align="left">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="es-m-p0r es-m-p20b esd-container-frame" width="254" align="center">
-                                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-text" align="left">
-                                                                                        <h3 style="font-size: 17px;">Download the app for ease of operations</h3>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                    <td class="es-hidden" width="20"></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        <!--[if mso]></td><td width="133" valign="top"><![endif]-->
-                                                        <table class="es-left" cellspacing="0" cellpadding="0" align="left">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="es-m-p20b esd-container-frame" width="133" align="center">
-                                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-image" align="center"><a target="_blank" href="https://viewstripo.email/"><img src="https://tlr.stripocdn.email/content/guids/CABINET_e48ed8a1cdc6a86a71047ec89b3eabf6/images/92051534250512328.png" alt="App Store" style="display: block;" class="adapt-img" title="App Store" width="133"></a></td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        <!--[if mso]></td><td width="20"></td><td width="133" valign="top"><![endif]-->
-                                                        <table class="es-right" cellspacing="0" cellpadding="0" align="right">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="esd-container-frame" width="133" align="center">
-                                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-image" align="center"><a target="_blank" href="https://viewstripo.email/"><img class="adapt-img" src="https://tlr.stripocdn.email/content/guids/CABINET_e48ed8a1cdc6a86a71047ec89b3eabf6/images/82871534250557673.png" alt="Google Play" style="display: block;" title="Google Play" width="133"></a></td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        <!--[if mso]></td></tr></table><![endif]-->
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table class="es-content" cellspacing="0" cellpadding="0" align="center">
-                            <tbody>
-                                <tr>
-                                    <td class="esd-stripe" style="background-color: #666666;" esd-custom-block-id="15624" bgcolor="#666666" align="center">
-                                        <table class="es-content-body" style="background-color: transparent;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="esd-structure" align="left">
-                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="esd-container-frame" width="600" valign="top" align="center">
-                                                                        <table style="background-color: #fff4f7; border-radius: 3px; border-collapse: separate;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#fff4f7">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-spacer es-p5t es-p5b es-p20r es-p20l" bgcolor="#fff4f7" align="center">
-                                                                                        <table width="100%" height="100%" cellspacing="0" cellpadding="0" border="0">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td style="border-bottom: 1px solid #fff4f7; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%; height: 1px; width: 100%; margin: 0px;"></td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table cellpadding="0" cellspacing="0" class="es-footer" align="center">
-                            <tbody>
-                                <tr>
-                                <td class="esd-stripe" style="background-color: #666666;" esd-custom-block-id="15625" bgcolor="#666666" align="center">
-                                <table class="es-footer-body" style="background-color: #666666;" width="600" cellspacing="0" cellpadding="0" bgcolor="#666666" align="center">
-                                    <tbody>
-                                        <tr>
-                                            <td class="esd-structure es-p20t es-p20b es-p20r es-p20l" align="left">
-                                                <table width="100%" cellspacing="0" cellpadding="0">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="esd-container-frame" width="560" valign="top" align="center">
-                                                                <table width="100%" cellspacing="0" cellpadding="0">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td esdev-links-color="#999999" class="esd-block-text" align="center">
-                                                                                <p style="color: #ffffff;">You are receiving this email because you registered for ICAN Eastern Zonal Conference 2025.</p>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td esdev-links-color="#999999" class="esd-block-text es-p5b" align="center">
-                                                                                <p style="color: #ffffff;">Tuesday 1st - Friday 4th April, 2025, Virtually</p>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table class="esd-footer-popover es-content" cellspacing="0" cellpadding="0" align="center">
-                            <tbody>
-                                <tr>
-                                    <td class="esd-stripe" style="background-color: #666666;" bgcolor="#666666" align="center">
-                                        <table class="es-content-body" style="background-color: #666666;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="esd-structure es-p30t es-p30b es-p20r es-p20l" align="left">
-                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="esd-container-frame" width="560" valign="top" align="center">
-                                                                        <table width="100%" cellspacing="0" cellpadding="0">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="esd-block-image es-infoblock made_with" align="center"><a target="_blank" href="https://www.icanezdconference.org.ng/"><img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt style="display: block; width: 115px; height: 143px;" height="143"></a></td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</body>
+            <div class="content">
+                <h2 class="greeting">🎓 Congratulations!</h2>
+                
+                <p class="text">
+                    Dear <strong>${name}</strong>,
+                </p>
+                
+                <p class="text">
+                    Thank you for your active participation in the <strong>ICAN Eastern Zonal Conference 2025</strong>. 
+                    Your engagement and contribution made the conference a tremendous success!
+                </p>
 
-</html>`;
-    },
-    sendReceipt: function (name, mode, invoiceData) {
-        return `
-    ${this.header}
-    <body>
-        <div class="es-wrapper-color">
-            <table class="es-wrapper" width="100%" cellspacing="0" cellpadding="0">
-                <tbody>
-                    <tr>
-                        <td class="esd-email-paddings" valign="top">
-                            <table class="es-content" cellspacing="0" cellpadding="0" align="center">
-                                <tbody>
-                                    <tr>
-                                        <td class="esd-stripe" align="center">
-                                            <table class="es-content-body" style="background-color: #ffffff;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="esd-structure es-p20t es-p20b es-p40r es-p40l" align="left">
-                                                            <table width="100%" cellspacing="0" cellpadding="0">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td class="esd-container-frame" width="520" valign="top" align="center">
-                                                                            <table width="100%" cellspacing="0" cellpadding="0">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td class="esd-block-text" align="left">
-                                                                                            <h1 style="color: #333333;">Payment Receipt</h1>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td class="esd-block-text es-p15t" align="left">
-                                                                                            <p>Dear ${name},</p>
-                                                                                            <p>Thank you for your payment. Below are your transaction details:</p>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="esd-structure es-p20t es-p20b es-p40r es-p40l" align="left">
-                                                            <table width="100%" cellspacing="0" cellpadding="0">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td class="esd-container-frame" width="520" valign="top" align="center">
-                                                                            <table width="100%" cellspacing="0" cellpadding="0" style="border: 1px solid #efefef;">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td style="padding: 10px; border-bottom: 1px solid #efefef;">
-                                                                                            <strong>Invoice Number:</strong> ${invoiceData.invoiceId}
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td style="padding: 10px; border-bottom: 1px solid #efefef;">
-                                                                                            <strong>Amount Paid:</strong> ₦${invoiceData.amount.toLocaleString()}
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td style="padding: 10px; border-bottom: 1px solid #efefef;">
-                                                                                            <strong>ICAN Code:</strong> ${invoiceData.code}
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td style="padding: 10px;">
-                                                                                            <strong>Payment Date:</strong> ${new Date().toLocaleDateString()}
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="esd-structure es-p20t es-p20b es-p40r es-p40l" align="left">
-                                                            <table width="100%" cellspacing="0" cellpadding="0">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td class="esd-container-frame" width="520" valign="top" align="center">
-                                                                            <table width="100%" cellspacing="0" cellpadding="0">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td class="esd-block-text" align="left">
-                                                                                            <p>This receipt confirms your registration for the ICAN Eastern Zonal Conference 2025.</p>
-                                                                                            <p>Conference Details:</p>
-                                                                                            <p>Date: Tuesday 1st - Friday 4th April, 2025<br>
-                                                                                            Mode:${mode} </p>
-                                                                                            <p>Please keep this receipt for your records.</p>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </body>
-    </html>`;
+                <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 24px; border-radius: 12px; text-align: center; margin: 24px 0;">
+                    <h3 style="margin: 0 0 12px 0; color: #92400e; font-size: 20px;">
+                        🏆 Certificate Attached
+                    </h3>
+                    <p style="margin: 0; color: #78350f; font-size: 16px;">
+                        Your official Certificate of Participation is attached to this email
+                    </p>
+                </div>
+
+                <div style="background-color: #ffffff; border: 2px dashed #e2e8f0; border-radius: 12px; padding: 24px; margin: 24px 0; text-align: center;">
+                    <img src="cid:cert" alt="Certificate" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                </div>
+
+                <div class="highlight-box">
+                    <h4 style="margin-top: 0; color: #1a202c;">📥 Download Instructions</h4>
+                    <p style="color: #4a5568; margin: 0;">
+                        Click the <strong>Download</strong> button or attachment icon in your email to save the certificate image. 
+                        You can print it or keep it digitally for your professional records.
+                    </p>
+                </div>
+
+                <div style="background-color: #f0fdf4; border-left: 4px solid #10b981; padding: 20px; border-radius: 8px; margin: 24px 0;">
+                    <h4 style="margin-top: 0; color: #065f46;">🌟 What's Next?</h4>
+                    <ul style="margin: 8px 0 0 0; padding-left: 20px; color: #047857;">
+                        <li>Add this certificate to your professional portfolio</li>
+                        <li>Share your achievement on LinkedIn</li>
+                        <li>Stay connected with fellow attendees</li>
+                        <li>Watch for announcements about next year's conference</li>
+                    </ul>
+                </div>
+
+                <p class="text">
+                    We hope you found the conference valuable and enriching. Your feedback is important to us, 
+                    and we'd love to hear about your experience.
+                </p>
+
+                <div style="text-align: center;">
+                    <a href="https://www.icanezdconference.org.ng/feedback" class="button">
+                        Share Your Feedback
+                    </a>
+                </div>
+
+                <p class="text" style="margin-top: 32px;">
+                    Once again, congratulations on completing the ICAN Eastern Zonal Conference 2025!
+                </p>
+
+                <p class="text">
+                    <strong>Best wishes for your continued success,</strong><br>
+                    ICAN Eastern Zonal Conference Team
+                </p>
+            </div>
+
+            ${this.footer}
+        </div>`;
     }
 };

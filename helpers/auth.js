@@ -36,7 +36,7 @@ module.exports = {
             }
 
             // Compute fields
-            const amount = this.calculateAmount(userData);
+            const { baseAmount, finalAmount } = this.calculateAmount(userData);
             const confirmedPayment = await this.isConfirmedPayment(userData.memberCategory, userData.tellerNumber);
 
             console.log("confirmedPayment", confirmedPayment);
@@ -51,7 +51,7 @@ module.exports = {
                 tellerDate: moment(userData.tellerDate),
                 role: [{ name: "User" }],
                 paymentProof: file ? file.location : null,
-                amount,
+                amount: finalAmount,
                 confirmedPayment,
             });
 
@@ -66,11 +66,14 @@ module.exports = {
         Password: ${userData.password}`
             );
 
+            const isDiscounted = baseAmount && finalAmount && baseAmount !== finalAmount;
+            const discountAmount = isDiscounted ? baseAmount - finalAmount : 0;
+
             if (!newUser.bulk) {
                 await mail.sendMail(
                     newUser.email,
                     "SUCCESSFUL REGISTRATION",
-                    template.register(newUser.name, newUser.email, userData.password)
+                    template.register(newUser.name, newUser.email, userData.password, finalAmount, isDiscounted, discountAmount)
                 );
             }
 
@@ -141,7 +144,7 @@ module.exports = {
         // Apply early bird discount if eligible
         const finalAmount = this.applyEarlyBirdDiscount(baseAmount);
 
-        return finalAmount;
+        return { finalAmount, baseAmount };
     },
 
     isConfirmedPayment: async function (memberCategory, reference) {

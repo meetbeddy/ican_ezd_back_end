@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const REMITA_MERCHANT_ID = process.env.REMITA_MERCHANT_ID;
 const REMITA_SERVICE_TYPE_ID = process.env.REMITA_SERVICE_TYPE_ID;
 const REMITA_API_KEY = process.env.REMITA_API_KEY;
-const REMITA_BASE_URL = "https://demo.remita.net";
+const REMITA_BASE_URL = process.env.REMITA_BASE_URL;
 
 module.exports = {
     initialisePayment: async (paymentData) => {

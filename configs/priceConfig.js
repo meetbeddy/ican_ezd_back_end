@@ -8,7 +8,7 @@ const PRICE_CONFIG = {
         "student-member": 30000,
     },
     virtual: {
-        default: 30000,
+        default: 25000,
     },
     special: {
         admin: 0,

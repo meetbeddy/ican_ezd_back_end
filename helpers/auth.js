@@ -21,6 +21,7 @@ module.exports = {
             throw new Error(errors[Object.keys(errors)[0]]);
         }
 
+
         const { email, memberCategory, nameOfSociety, venue } = userData;
 
         if (await User.findOne({ email })) {
@@ -49,6 +50,7 @@ module.exports = {
             );
             role = [{ name: "User" }];
         }
+
 
         const hashedPassword = await this.hashPassword(userData.password);
 

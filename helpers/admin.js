@@ -306,13 +306,6 @@ module.exports = {
 	},
 	// bulk registration helper
 	uploadUsers: async (data) => {
-		/*
-		Incoming rows usually come from a CSV/JSON export with column keys like
-		"surname", "otherNames", "email", "status", etc.  We need to map
-		those to the shape expected by `validation.register` and the User model
-		and then delegate to `authHelper.singleSignUp` so we get all the business
-		rules (amount calculation, hashing, email/sms suppression, etc.).
-		*/
 
 		const mappedUsers = data.map((row) => {
 			const user = {};
@@ -325,22 +318,22 @@ module.exports = {
 			// copy straightforward fields
 			user.email = row.email;
 			user.password = row.password && row.password.toString();
-			user.confirm_password = user.password; // validation requirement
+			user.confirm_password = user.password;
 			user.bankName = row.bankName;
-			user.tellerNumber = row.tellerNumber;
+			user.tellerNumber = row.tellerNumber.toString();
 			user.tellerDate = row.tellerDate ? moment(row.tellerDate) : moment();
-			user.status = row.status || "active";
+			user.status = "active";
 			user.phone = row.phone && row.phone.toString();
 			user.gender = row.gender && row.gender.toLowerCase();
 			user.icanCode = row.icanCode;
 			user.tshirtSize = row.tshirtSize;
-			user.memberStatus = row.memberStatus;
-			user.memberCategory = row.memberCategory;
+			user.memberStatus = row.memberStatus?.toLowerCase();
+			user.memberCategory = row.memberCategory?.toLowerCase();
 			user.memberAcronym = row.memberAcronym;
 			user.nameOfSociety = row.nameOfSociety;
 			user.venue = row.venue;
 
-			// optional numeric/boolean conversions
+
 			if (row.amount !== undefined) {
 				user.amount = Number(row.amount) || 0;
 			}
@@ -360,9 +353,7 @@ module.exports = {
 		const added = [];
 		for (const user of mappedUsers) {
 			try {
-				// reuse existing signup logic; it will run validation, hash the
-				// password, compute amounts and respect the `bulk` flag so emails
-				// / invoices are suppressed.
+
 				const created = await authHelper.singleSignUp(user, null);
 				added.push(created);
 			} catch (err) {

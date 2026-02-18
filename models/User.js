@@ -1,3 +1,4 @@
+const e = require("express");
 const mongoose = require("mongoose");
 const mongooseSchema = mongoose.Schema;
 // const bcrypt = require("bcryptjs");
@@ -149,15 +150,15 @@ const userSchema = mongooseSchema(
 		password: { type: String, trim: true, required: true, minlength: 6 },
 		name: { type: String, trim: true, required: true },
 		phone: { type: String, trim: true, required: true },
-		gender: { type: String, trim: true },
+		gender: { type: String, trim: true, enums: ["male", "female", "other"] },
 		bankName: { type: String, trim: true, required: true },
 		tellerNumber: { type: String, trim: true, required: true },
 		tellerDate: { type: Date, required: true },
-		status: { type: String, trim: true, default: "active" },
+		status: { type: String, trim: true, default: "active", enums: ["active", "inactive"] },
 		venue: { type: String, trim: true, required: true },
-		memberStatus: { type: String, trim: true, required: true },
-		memberCategory: { type: String, trim: true },
-		memberAcronym: { type: String, trim: true },
+		memberStatus: { type: String, trim: true, required: true, enums: ["member", "nonmember"] },
+		memberCategory: { type: String, trim: true, enums: ["admin", "planning", "full-paying member", "half-paying member", "young-accountants", "nonmember"] },
+		memberAcronym: { type: String, trim: true, enums: ["ACA", "FCA"] },
 		nameOfSociety: { type: String, trim: true },
 		icanCode: { type: String, trim: true },
 		tshirtSize: {

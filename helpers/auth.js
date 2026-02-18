@@ -29,11 +29,26 @@ module.exports = {
 
         await this.enforceHalfPayingLimit(memberCategory, nameOfSociety);
 
-        const { baseAmount, finalAmount } = this.calculateAmount(userData);
-        const confirmedPayment = await this.isConfirmedPayment(
-            memberCategory,
-            userData.tellerNumber
-        );
+        let finalAmount, baseAmount;
+        let confirmedPayment;
+        let role;
+
+        if (userData.bulk) {
+            finalAmount = userData.amount;
+            baseAmount = userData.amount; // or 0, doesn't matter much for bulk
+            confirmedPayment = userData.confirmedPayment;
+            role = userData.role || [{ name: "User" }];
+        } else {
+            const amounts = this.calculateAmount(userData);
+            baseAmount = amounts.baseAmount;
+            finalAmount = amounts.finalAmount;
+
+            confirmedPayment = await this.isConfirmedPayment(
+                memberCategory,
+                userData.tellerNumber
+            );
+            role = [{ name: "User" }];
+        }
 
         const hashedPassword = await this.hashPassword(userData.password);
 
@@ -41,7 +56,7 @@ module.exports = {
             ...userData,
             password: hashedPassword,
             tellerDate: moment(userData.tellerDate),
-            role: [{ name: "User" }],
+            role,
             paymentProof: file?.location || null,
             amount: finalAmount,
             confirmedPayment,

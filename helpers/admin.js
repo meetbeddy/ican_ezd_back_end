@@ -16,6 +16,7 @@ const fs = require("fs");
 const { stat } = require("fs/promises");
 const { error } = require("console");
 const mailgun = require("./mailgun");
+const authHelper = require("./auth");
 
 s3 = new aws.S3({
 	credentials: {
@@ -303,57 +304,74 @@ module.exports = {
 				.catch((err) => reject(err));
 		});
 	},
+	// bulk registration helper
 	uploadUsers: async (data) => {
-		// console.log("🚀 ~ file: admin.js ~ line 133 ~ data", data);
+		/*
+		Incoming rows usually come from a CSV/JSON export with column keys like
+		"surname", "otherNames", "email", "status", etc.  We need to map
+		those to the shape expected by `validation.register` and the User model
+		and then delegate to `authHelper.singleSignUp` so we get all the business
+		rules (amount calculation, hashing, email/sms suppression, etc.).
+		*/
 
-		try {
-			let users = data.map((value) => {
-				if (typeof value.confirmedPayment === "string") {
-					if (value.confirmedPayment.toLowerCase() === "true")
-						value.confirmedPayment = true;
-					else {
-						value.confirmedPayment = false;
-					}
-				}
+		const mappedUsers = data.map((row) => {
+			const user = {};
 
-				if (typeof value.confirmedPayment === "boolean") {
-					value.confirmedPayment = value.confirmedPayment ? true : false;
-				}
-				value.password = value.password.toString();
-				value.phone = value.phone.toString();
-				value.tellerDate = moment().format();
-				value.role = [{ name: value.role }];
-				value.gender = value.gender.toLowerCase();
-				value.confirm_password = value.password;
-				value.bulk = true;
-				return value;
-			});
-			const addedUser = [];
-			users.forEach(async (user) => {
-				const { errors, isValid } = validation.register(user);
-				if (!isValid) {
-					console.log(errors);
-					throw new Error(errors);
-				}
-				let existingUser = await User.findOne({ email: user.email });
+			// combine name fields
+			const surname = row.surname || "";
+			const otherNames = row.otherNames || "";
+			user.name = `${surname} ${otherNames}`.trim() || row.name;
 
-				if (existingUser) {
-					console.log({ email: "User with this email already exist" });
+			// copy straightforward fields
+			user.email = row.email;
+			user.password = row.password && row.password.toString();
+			user.confirm_password = user.password; // validation requirement
+			user.bankName = row.bankName;
+			user.tellerNumber = row.tellerNumber;
+			user.tellerDate = row.tellerDate ? moment(row.tellerDate) : moment();
+			user.status = row.status || "active";
+			user.phone = row.phone && row.phone.toString();
+			user.gender = row.gender && row.gender.toLowerCase();
+			user.icanCode = row.icanCode;
+			user.tshirtSize = row.tshirtSize;
+			user.memberStatus = row.memberStatus;
+			user.memberCategory = row.memberCategory;
+			user.memberAcronym = row.memberAcronym;
+			user.nameOfSociety = row.nameOfSociety;
+			user.venue = row.venue;
 
-					// throw new Error("user with this email already exist");
-					return;
-				}
-				const newUser = new User({
-					...user,
-				});
-				await newUser.save();
-				addedUser.push(user);
-				return user;
-			});
-			return addedUser;
-		} catch (err) {
-			throw new Error(err);
+			// optional numeric/boolean conversions
+			if (row.amount !== undefined) {
+				user.amount = Number(row.amount) || 0;
+			}
+			if (typeof row.confirmedPayment === "string") {
+				user.confirmedPayment = row.confirmedPayment.toLowerCase() === "true";
+			} else if (typeof row.confirmedPayment === "boolean") {
+				user.confirmedPayment = row.confirmedPayment;
+			}
+
+			// role/flags
+			user.role = [{ name: row.role || "User" }];
+			user.bulk = true;
+
+			return user;
+		});
+
+		const added = [];
+		for (const user of mappedUsers) {
+			try {
+				// reuse existing signup logic; it will run validation, hash the
+				// password, compute amounts and respect the `bulk` flag so emails
+				// / invoices are suppressed.
+				const created = await authHelper.singleSignUp(user, null);
+				added.push(created);
+			} catch (err) {
+				// log and continue; caller can decide how to handle failures
+				console.error(`bulk upload error for ${user.email}:`, err.message);
+			}
 		}
+
+		return added;
 	},
 	getUsersReceipts: function () {
 		return new Promise((resolve, reject) => {

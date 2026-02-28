@@ -10,6 +10,7 @@ const AdminRoute = require("./routes/v1/admin");
 const userRoute = require("./routes/v1/user");
 const api = require("./routes/v1/angels");
 const paymentRoute = require("./routes/v1/payment")
+const webhookRoute = require("./routes/v1/webhook");
 const env = require("dotenv");
 env.config();
 
@@ -24,6 +25,7 @@ app.use("/api/user", authRoute);
 app.use("/api/admin", AdminRoute);
 app.use("/api/attendant", userRoute);
 app.use("/api/payments", paymentRoute);
+app.use("/api/webhook", webhookRoute);
 app.use("/api", api);
 app.use("/", (req, res) => {
     res.status(200).send("everything soft here");

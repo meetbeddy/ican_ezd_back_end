@@ -106,4 +106,31 @@ module.exports = {
         return data;
     },
 
+    getPaymentDetails: async (reference) => {
+        const User = require("../models/User");
+
+        let user = await User.findOne({
+            $or: [
+                { email: reference.toLowerCase() },
+                { tellerNumber: reference }
+            ]
+        });
+
+        if (!user) {
+            throw new Error("Registration not found with the provided reference");
+        }
+
+        // Return only necessary details for payment
+        return {
+            name: user.name,
+            email: user.email,
+            rrr: user.tellerNumber,
+            amount: user.amount,
+            phone: user.phone,
+            memberStatus: user.memberStatus,
+            category: user.category,
+            venue: user.venue,
+            confirmedPayment: user.confirmedPayment
+        };
+    }
 };

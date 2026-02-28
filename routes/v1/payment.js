@@ -46,5 +46,31 @@ router.get("/verify/:rrr", async (req, res) => {
     }
 });
 
+router.get("/details/:reference", async (req, res) => {
+    try {
+        const { reference } = req.params;
+
+        if (!reference) {
+            return res.status(400).json({
+                message: "Reference (Email or RRR) is required",
+                success: false,
+            });
+        }
+
+        const details = await paymentHelper.getPaymentDetails(reference);
+
+        return res.status(200).json({
+            message: "Payment details fetched successfully",
+            success: true,
+            data: details,
+        });
+    } catch (err) {
+        return res.status(400).json({
+            message: err.message || "Registration not found",
+            success: false,
+        });
+    }
+});
+
 
 module.exports = router;

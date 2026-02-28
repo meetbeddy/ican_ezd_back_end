@@ -174,7 +174,7 @@ module.exports = {
                 <td align="center">
                     <img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt="ICAN Logo" style="max-width: 80px; margin-bottom: 16px;">
                     <p style="margin: 12px 0;">Institute of Chartered Accountants of Nigeria</p>
-                    <p style="margin: 12px 0;">Eastern Zonal District Conference 2025</p>
+                    <p style="margin: 12px 0;">Eastern Zonal District Conference 2026</p>
                     <p style="margin: 12px 0; font-size: 13px;">
                         You're receiving this email because you registered for the ICAN Eastern Zonal Conference.
                     </p>
@@ -183,7 +183,7 @@ module.exports = {
                         <a href="mailto:info@icanezdconference.org.ng">Contact Us</a>
                     </div>
                     <p style="margin-top: 20px; font-size: 12px; color: #718096;">
-                        © 2025 ICAN Eastern Zonal District. All rights reserved.
+                        © 2026 ICAN Eastern Zonal District. All rights reserved.
                     </p>
                 </td>
             </tr>
@@ -199,7 +199,7 @@ module.exports = {
         <div class="email-container">
             <div class="header">
                 <img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt="ICAN Logo">
-                <h1 style="color: white; margin: 16px 0 0 0; font-size: 28px;">Welcome to ICAN 2025!</h1>
+                <h1 style="color: white; margin: 16px 0 0 0; font-size: 28px;">Welcome to ICAN 2026!</h1>
             </div>
 
             <div class="content">
@@ -210,7 +210,7 @@ module.exports = {
                 </p>
                 
                 <p class="text">
-                    Congratulations! You've successfully registered for the <strong>ICAN Eastern Zonal Conference 2025</strong>. 
+                    Congratulations! You've successfully registered for the <strong>ICAN Eastern Zonal Conference 2026</strong>. 
                     We're excited to have you join us for this transformative experience.
                 </p>
 
@@ -223,7 +223,7 @@ module.exports = {
 
                 <div class="conference-details">
                     <h4>📅 Conference Details</h4>
-                    <p><strong>Date:</strong> Tuesday 1st - Friday 4th April, 2025</p>
+                    <p><strong>Date:</strong> Tuesday 1st - Friday 4th April, 2026</p>
                     <p><strong>Mode:</strong> Virtual & Physical Attendance Available</p>
                     <p><strong>Theme:</strong> Innovation & Excellence in Accounting</p>
                 </div>
@@ -373,7 +373,7 @@ module.exports = {
                 </p>
                 
                 <p class="text">
-                    Thank you for your payment! Your registration for the ICAN Eastern Zonal Conference 2025 is now complete.
+                    Thank you for your payment! Your registration for the ICAN Eastern Zonal Conference 2026 is now complete.
                 </p>
 
                 ${hasDiscount ? `
@@ -419,7 +419,7 @@ module.exports = {
 
                 <div class="conference-details">
                     <h4>📅 Your Conference Registration</h4>
-                    <p><strong>Date:</strong> Tuesday 1st - Friday 4th April, 2025</p>
+                    <p><strong>Date:</strong> Tuesday 1st - Friday 4th April, 2026</p>
                     <p><strong>Attendance Mode:</strong> ${mode}</p>
                     <p><strong>Status:</strong> <span style="color: #059669; font-weight: 700;">CONFIRMED ✓</span></p>
                 </div>
@@ -472,7 +472,7 @@ module.exports = {
                 </p>
                 
                 <p class="text">
-                    Thank you for your active participation in the <strong>ICAN Eastern Zonal Conference 2025</strong>. 
+                    Thank you for your active participation in the <strong>ICAN Eastern Zonal Conference 2026</strong>. 
                     Your engagement and contribution made the conference a tremendous success!
                 </p>
 
@@ -516,6 +516,86 @@ module.exports = {
 
                 <p class="text">
                     <strong>Best wishes for your continued success,</strong><br>
+                    ICAN Eastern Zonal Conference Team
+                </p>
+            </div>
+
+            ${this.footer}
+        </div>`;
+    },
+
+    invoice: function (name, email, rrr, amount, hasDiscount = false, discountAmount = 0) {
+        const originalAmount = hasDiscount ? amount + discountAmount : amount;
+        const paymentLink = `https://www.icanezdconference.org.ng/payment?rrr=${rrr}`;
+
+        return `
+        ${this.header}
+        <div class="email-container">
+            <div class="header">
+                <img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt="ICAN Logo">
+                <h1 style="color: white; margin: 16px 0 0 0; font-size: 28px;">Payment Invoice</h1>
+            </div>
+
+            <div class="content">
+                <h2 class="greeting">📋 Your Registration is Pending</h2>
+                
+                <p class="text">
+                    Hi <strong>${name}</strong>,
+                </p>
+                
+                <p class="text">
+                    Thank you for registering for the <strong>ICAN Eastern Zonal Conference 2026</strong>. 
+                    Your registration details have been received, but your account is currently <strong>PENDING</strong> payment.
+                </p>
+
+                <div class="highlight-box" style="border-left-color: #f59e0b;">
+                    <h4 style="margin-top: 0; color: #1a202c;">⚠️ Action Required</h4>
+                    <p style="color: #4a5568; margin: 0;">
+                        To fully activate your registration and receive your conference materials, please complete your payment using the details below.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <h3 style="margin-top: 0; color: #1a202c; font-size: 18px;">💳 Payment Information</h3>
+                    <div class="info-row">
+                        <span class="info-label">RRR Number:</span>
+                        <span class="info-value"><strong style="color: #667eea; font-size: 20px;">${rrr}</strong></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Amount to Pay:</span>
+                        <span class="info-value" style="color: #1a202c; font-size: 18px;">₦${amount.toLocaleString()}</span>
+                    </div>
+                    ${hasDiscount ? `
+                    <div class="info-row">
+                        <span class="info-label">Included Discount:</span>
+                        <span class="info-value" style="color: #10b981;">₦${discountAmount.toLocaleString()} (Early Bird)</span>
+                    </div>
+                    ` : ''}
+                </div>
+
+                <div class="conference-details">
+                    <h4>How to Complete Your Payment:</h4>
+                    <div style="text-align: left; margin-bottom: 20px;">
+                        <p><strong>Option 1: Pay Online Now</strong></p>
+                        <p style="font-size: 14px; margin-bottom: 15px;">Click the button below to pay using your card or bank transfer on our secure payment page.</p>
+                        
+                        <p><strong>Option 2: Pay at any Bank</strong></p>
+                        <p style="font-size: 14px;">Visit any bank branch in Nigeria, provide the RRR <strong>${rrr}</strong>, and pay exactly <strong>₦${amount.toLocaleString()}</strong>.</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="${paymentLink}" class="button">
+                        Complete Payment Online
+                    </a>
+                </div>
+
+                <p class="text" style="font-size: 14px; color: #718096; text-align: center;">
+                    After payment, your registration will be automatically confirmed within minutes.
+                </p>
+
+                <p class="text" style="margin-top: 32px;">
+                    <strong>Best regards,</strong><br>
                     ICAN Eastern Zonal Conference Team
                 </p>
             </div>

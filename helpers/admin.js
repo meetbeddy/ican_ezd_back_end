@@ -214,7 +214,7 @@ module.exports = {
 
 			sms.sendOne(
 				user.phone,
-				`Dear ${user.name}, your payment for ICAN Eastern Zonal  Conference 2025 has been confirmed, please login to your profile to print your receipt. Thanks`
+				`Dear ${user.name}, your payment for ICAN Eastern Zonal  Conference 2026 has been confirmed, please login to your profile to print your receipt. Thanks`
 			);
 			// await cert.sendAfterConfirmed(user);
 

@@ -122,7 +122,7 @@ const mongooseSchema = mongoose.Schema;
 
 // 			sms.sendOne(
 // 				user.phone,
-// 				`Dear ${user.name}, You Have Successfully Registered for the 2025 ICAN Ican Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `
+// 				`Dear ${user.name}, You Have Successfully Registered for the 2026 ICAN Ican Conference. Here are your login details: Username: ${user.email}. password: ${user.password} `
 // 			);
 // 			if (!user.bulk) {
 // 				mail.sendMail(

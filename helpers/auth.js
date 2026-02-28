@@ -22,13 +22,18 @@ module.exports = {
         }
 
 
-        const { email, memberCategory, nameOfSociety, venue } = userData;
+        const { email, memberCategory, nameOfSociety = "", venue } = userData;
 
-        if (await User.findOne({ email })) {
-            throw new Error("User with this email already exists");
+        let existingUser = await User.findOne({ email });
+        if (existingUser) {
+            if (existingUser.confirmedPayment) {
+                throw new Error("User with this email already exists and is already confirmed");
+            }
+            // If user exists but is NOT confirmed, we allow updating their details
+            // this effectively makes the signup idempotent for pending registrations
         }
 
-        await this.enforceHalfPayingLimit(memberCategory, nameOfSociety);
+        await this.enforceHalfPayingLimit(memberCategory, nameOfSociety, existingUser?._id);
 
         let finalAmount, baseAmount;
         let confirmedPayment;
@@ -54,20 +59,35 @@ module.exports = {
 
         const hashedPassword = await this.hashPassword(userData.password);
 
-        const newUser = new User({
-            ...userData,
-            password: hashedPassword,
-            tellerDate: moment(userData.tellerDate),
-            role,
-            paymentProof: file?.location || null,
-            amount: finalAmount,
-            confirmedPayment,
-        });
-
-        await newUser.save();
+        let user;
+        if (existingUser) {
+            // Update existing unconfirmed user
+            existingUser.set({
+                ...userData,
+                password: hashedPassword,
+                tellerDate: userData.tellerDate ? moment(userData.tellerDate) : moment(),
+                role,
+                paymentProof: file?.location || existingUser.paymentProof || null,
+                amount: finalAmount,
+                confirmedPayment,
+            });
+            user = await existingUser.save();
+        } else {
+            // Create new user
+            user = new User({
+                ...userData,
+                password: hashedPassword,
+                tellerDate: userData.tellerDate ? moment(userData.tellerDate) : moment(),
+                role,
+                paymentProof: file?.location || null,
+                amount: finalAmount,
+                confirmedPayment,
+            });
+            await user.save();
+        }
 
         await this.sendNotifications({
-            user: newUser,
+            user,
             rawPassword: userData.password,
             baseAmount,
             finalAmount,
@@ -75,18 +95,24 @@ module.exports = {
             confirmedPayment,
         });
 
-        return newUser;
+        return user;
     },
 
     /* ---------------- HELPERS ---------------- */
 
-    async enforceHalfPayingLimit(memberCategory, society) {
+    async enforceHalfPayingLimit(memberCategory, society, userId = null) {
         if (memberCategory !== "half-paying member") return;
 
-        const count = await User.countDocuments({
+        const query = {
             nameOfSociety: society,
             memberCategory: "half-paying member",
-        });
+        };
+
+        if (userId) {
+            query._id = { $ne: userId };
+        }
+
+        const count = await User.countDocuments(query);
 
         if (count >= 2) {
             throw new Error(
@@ -156,25 +182,40 @@ module.exports = {
 
         sms.sendOne(
             user.phone,
-            `Dear ${user.name}, your registration for the 2025 ICAN Conference was successful.
+            `Dear ${user.name}, your registration for the 2026 ICAN Conference was successful.
 Username: ${user.email}
 Password: ${rawPassword}`
         );
 
         if (user.bulk) return;
 
-        await mail.sendMail(
-            user.email,
-            "SUCCESSFUL REGISTRATION",
-            template.register(
-                user.name,
+        if (confirmedPayment) {
+            await mail.sendMail(
                 user.email,
-                rawPassword,
-                finalAmount,
-                isDiscounted,
-                discountAmount
-            )
-        );
+                "SUCCESSFUL REGISTRATION",
+                template.register(
+                    user.name,
+                    user.email,
+                    rawPassword,
+                    finalAmount,
+                    isDiscounted,
+                    discountAmount
+                )
+            );
+        } else {
+            await mail.sendMail(
+                user.email,
+                "PAYMENT INVOICE - ACTION REQUIRED",
+                template.invoice(
+                    user.name,
+                    user.email,
+                    user.tellerNumber, // This is the RRR
+                    finalAmount,
+                    isDiscounted,
+                    discountAmount
+                )
+            );
+        }
 
         if (!confirmedPayment) return;
 

@@ -31,6 +31,24 @@ router.post("/auth/signup", upload.single("file"), async (req, res) => {
 		});
 	}
 });
+
+/* POST route to update a pending registration. */
+router.post("/auth/update-pending", upload.single("file"), async (req, res) => {
+	try {
+		await authHelper.updateRegistration(req.body, req.file);
+
+		return res.status(200).json({
+			message: "Registration updated successfully",
+			success: true,
+		});
+	} catch (err) {
+		return res.status(400).json({
+			message: err.message || "Something went wrong",
+			success: false,
+		});
+	}
+});
+
 /* POST route Logs user in. */
 router.post("/auth/signin", async (req, res) => {
 	try {

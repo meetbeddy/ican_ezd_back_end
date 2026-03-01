@@ -244,4 +244,54 @@ Password: ${rawPassword}`
             )
         );
     },
+
+    async updateRegistration(userData, file) {
+        const { email } = userData;
+        if (!email) throw new Error("Email is required for update");
+
+        let user = await User.findOne({ email });
+        if (!user) throw new Error("User not found");
+        if (user.confirmedPayment) throw new Error("Registration already confirmed and cannot be updated");
+
+        // Prepare update data - excluding sensitive fields like email/password unless explicitly handling them
+        const updateData = { ...userData };
+        delete updateData.email; // Don't allow email change via this endpoint
+
+        if (userData.password) {
+            updateData.password = await this.hashPassword(userData.password);
+        } else {
+            delete updateData.password;
+        }
+
+        if (userData.tellerDate) {
+            updateData.tellerDate = moment(userData.tellerDate);
+        }
+
+        if (file) {
+            updateData.paymentProof = file.location;
+        }
+
+        // Recalculate amounts if relevant fields changed
+        if (userData.venue || userData.memberStatus || userData.memberCategory) {
+            const amounts = this.calculateAmount({
+                venue: userData.venue || user.venue,
+                memberStatus: userData.memberStatus || user.memberStatus,
+                memberCategory: userData.memberCategory || user.memberCategory
+            });
+            updateData.amount = amounts.finalAmount;
+        }
+
+        // Re-check payment status if tellerNumber changed
+        if (userData.tellerNumber) {
+            updateData.confirmedPayment = await this.isConfirmedPayment(
+                userData.memberCategory || user.memberCategory,
+                userData.tellerNumber
+            );
+        }
+
+        user.set(updateData);
+        await user.save();
+
+        return user;
+    },
 };

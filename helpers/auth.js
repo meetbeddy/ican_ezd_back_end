@@ -162,8 +162,10 @@ module.exports = {
 
         try {
             const result = await paymentHelper.checkPaymentStatus(reference);
-            return ["00", "01"].includes(result?.status) ||
-                result?.message?.toLowerCase().includes("success");
+            // Remita returns '00' or '01' for successful payments.
+            // A pending RRR might return '021' with 'RRR Generated Successfully'.
+            // Removed loose `.includes('success')` to prevent marking unpaid RRRs as confirmed.
+            return ["00", "01"].includes(result?.status);
         } catch {
             return false;
         }

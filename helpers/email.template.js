@@ -602,5 +602,92 @@ module.exports = {
 
             ${this.footer}
         </div>`;
+    },
+
+    directLodgementPending: function (name, email, password, amount, tellerNumber, hasDiscount = false, discountAmount = 0) {
+        const originalAmount = hasDiscount ? amount + discountAmount : amount;
+
+        return `
+        ${this.header}
+        <div class="email-container">
+            <div class="header">
+                <img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt="ICAN Logo">
+                <h1 style="color: white; margin: 16px 0 0 0; font-size: 28px;">Registration Received</h1>
+            </div>
+
+            <div class="content">
+                <h2 class="greeting">✅ Payment Received — Pending Confirmation</h2>
+                
+                <p class="text">
+                    Hi <strong>${name}</strong>,
+                </p>
+                
+                <p class="text">
+                    Thank you for registering for the <strong>ICAN Eastern Zonal Conference 2026</strong>.
+                    We have received your registration and your payment is currently being reviewed and confirmed by our admin team.
+                </p>
+
+                <div class="highlight-box" style="border-left-color: #f59e0b;">
+                    <h4 style="margin-top: 0; color: #1a202c;">⏳ Awaiting Admin Confirmation</h4>
+                    <p style="color: #4a5568; margin: 0;">
+                        Your lodgement is subject to confirmation. Once verified, your account will be fully activated and you will receive a confirmation email with your receipt.
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <h3 style="margin-top: 0; color: #1a202c; font-size: 18px;">📋 Registration Summary</h3>
+                    <div class="info-row">
+                        <span class="info-label">Name:</span>
+                        <span class="info-value">${name}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">${email}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Transaction Ref:</span>
+                        <span class="info-value"><strong>${tellerNumber || 'N/A'}</strong></span>
+                    </div>
+                    ${hasDiscount ? `
+                    <div class="info-row">
+                        <span class="info-label">Original Amount:</span>
+                        <span class="info-value" style="text-decoration: line-through; color: #718096;">₦${originalAmount.toLocaleString()}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Discount (5%):</span>
+                        <span class="info-value" style="color: #10b981;">-₦${discountAmount.toLocaleString()}</span>
+                    </div>
+                    ` : ''}
+                    <div class="info-row">
+                        <span class="info-label">Amount Lodged:</span>
+                        <span class="info-value" style="color: #667eea; font-size: 18px;">₦${amount.toLocaleString()}</span>
+                    </div>
+                </div>
+
+                <div class="info-card" style="background: #f0fdf4; border-color: #bbf7d0;">
+                    <h3 style="margin-top: 0; color: #166534; font-size: 16px;">🔐 Your Login Credentials</h3>
+                    <p style="color: #4a5568; font-size: 14px; margin-bottom: 12px;">Save these details. You will be able to log in once your payment has been confirmed.</p>
+                    <div class="info-row">
+                        <span class="info-label">Username:</span>
+                        <span class="info-value">${email}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Password:</span>
+                        <span class="info-value">${password}</span>
+                    </div>
+                </div>
+
+                <p class="text">
+                    If you have any questions about your registration, please contact our support team.
+                </p>
+
+                <p class="text" style="margin-top: 32px;">
+                    <strong>Best regards,</strong><br>
+                    ICAN Eastern Zonal Conference Team
+                </p>
+            </div>
+
+            ${this.footer}
+        </div>`;
     }
 };

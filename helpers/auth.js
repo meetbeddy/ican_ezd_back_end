@@ -62,7 +62,8 @@ module.exports = {
             confirmedPayment = await this.isConfirmedPayment(
                 memberCategory,
                 userData.tellerNumber,
-                finalAmount
+                finalAmount,
+                userData.bankName
             );
             role = [{ name: "User" }];
         }
@@ -104,6 +105,7 @@ module.exports = {
             finalAmount,
             venue,
             confirmedPayment,
+            bankName: userData.bankName,
         });
 
         return user;
@@ -164,12 +166,17 @@ module.exports = {
         return { baseAmount, finalAmount };
     },
 
-    async isConfirmedPayment(memberCategory, reference, expectedAmount) {
+    async isConfirmedPayment(memberCategory, reference, expectedAmount, bankName) {
         if (["admin", "planning"].includes(memberCategory?.toLowerCase())) {
             return true;
         }
 
         if (!reference) return false;
+
+        // Direct lodgement / bank transfer — not a Remita payment, always pending until manually confirmed
+        if (bankName && bankName.toLowerCase() !== "remita transaction") {
+            return false;
+        }
 
         try {
             const result = await paymentHelper.checkPaymentStatus(reference);
@@ -191,9 +198,11 @@ module.exports = {
         finalAmount,
         venue,
         confirmedPayment,
+        bankName,
     }) {
         const isDiscounted = baseAmount > finalAmount;
         const discountAmount = baseAmount - finalAmount;
+        const isDirectLodgement = bankName && bankName.toLowerCase() !== "remita transaction";
 
         sms.sendOne(
             user.phone,
@@ -213,6 +222,20 @@ Password: ${rawPassword}`
                     user.email,
                     rawPassword,
                     finalAmount,
+                    isDiscounted,
+                    discountAmount
+                )
+            );
+        } else if (isDirectLodgement) {
+            await mail.sendMail(
+                user.email,
+                "REGISTRATION RECEIVED - PENDING CONFIRMATION",
+                template.directLodgementPending(
+                    user.name,
+                    user.email,
+                    rawPassword,
+                    finalAmount,
+                    user.tellerNumber,
                     isDiscounted,
                     discountAmount
                 )
@@ -307,10 +330,12 @@ Password: ${rawPassword}`
 
         // Re-check payment status if tellerNumber changed
         if (userData.tellerNumber) {
+            const effectiveBankName = userData.bankName || user.bankName;
             updateData.confirmedPayment = await this.isConfirmedPayment(
                 userData.memberCategory || user.memberCategory,
                 userData.tellerNumber,
-                updateData.amount || user.amount
+                updateData.amount || user.amount,
+                effectiveBankName
             );
         }
 

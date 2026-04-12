@@ -35,6 +35,16 @@ module.exports = {
 
         await this.enforceHalfPayingLimit(memberCategory, nameOfSociety, existingUser?._id);
 
+        if (userData.tellerNumber && !userData.bulk) {
+            const existingRrrUser = await User.findOne({ 
+                tellerNumber: userData.tellerNumber
+            });
+            const currentEmail = (email || (existingUser && existingUser.email));
+            if (existingRrrUser && existingRrrUser.email !== currentEmail) {
+                throw new Error("This payment reference (RRR) is already associated with another user's account.");
+            }
+        }
+
         let finalAmount, baseAmount;
         let confirmedPayment;
         let role;
@@ -51,7 +61,8 @@ module.exports = {
 
             confirmedPayment = await this.isConfirmedPayment(
                 memberCategory,
-                userData.tellerNumber
+                userData.tellerNumber,
+                finalAmount
             );
             role = [{ name: "User" }];
         }
@@ -153,7 +164,7 @@ module.exports = {
         return { baseAmount, finalAmount };
     },
 
-    async isConfirmedPayment(memberCategory, reference) {
+    async isConfirmedPayment(memberCategory, reference, expectedAmount) {
         if (["admin", "planning"].includes(memberCategory?.toLowerCase())) {
             return true;
         }
@@ -162,10 +173,12 @@ module.exports = {
 
         try {
             const result = await paymentHelper.checkPaymentStatus(reference);
-            // Remita returns '00' or '01' for successful payments.
-            // A pending RRR might return '021' with 'RRR Generated Successfully'.
-            // Removed loose `.includes('success')` to prevent marking unpaid RRRs as confirmed.
-            return ["00", "01"].includes(result?.status);
+            if (!["00", "01"].includes(result?.status)) return false;
+            
+            if (expectedAmount && Number(result.amount) < Number(expectedAmount)) {
+                return false;
+            }
+            return true;
         } catch {
             return false;
         }
@@ -255,6 +268,15 @@ Password: ${rawPassword}`
         if (!user) throw new Error("User not found");
         if (user.confirmedPayment) throw new Error("Registration already confirmed and cannot be updated");
 
+        if (userData.tellerNumber && userData.tellerNumber !== user.tellerNumber) {
+            const existingRrrUser = await User.findOne({ 
+                tellerNumber: userData.tellerNumber
+            });
+            if (existingRrrUser && existingRrrUser.email !== email) {
+                throw new Error("This payment reference (RRR) is already associated with another user's account.");
+            }
+        }
+
         // Prepare update data - excluding sensitive fields like email/password unless explicitly handling them
         const updateData = { ...userData };
         delete updateData.email; // Don't allow email change via this endpoint
@@ -287,7 +309,8 @@ Password: ${rawPassword}`
         if (userData.tellerNumber) {
             updateData.confirmedPayment = await this.isConfirmedPayment(
                 userData.memberCategory || user.memberCategory,
-                userData.tellerNumber
+                userData.tellerNumber,
+                updateData.amount || user.amount
             );
         }
 

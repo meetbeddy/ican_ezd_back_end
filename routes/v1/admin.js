@@ -302,6 +302,20 @@ router.post(
 			.catch((err) => res.status(400).json(err));
 	}
 );
+
+router.post(
+	"/send_message",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		if (req.user.role[0].name.toLowerCase() !== "admin") {
+			return res.status(401).json({ message: "unauthorized" });
+		}
+		adminHelper
+			.sendMessage(req.body)
+			.then((data) => res.json(data))
+			.catch((err) => res.status(400).json(err));
+	}
+);
 router.post(
 	"/attendance",
 	passport.authenticate("jwt", { session: false }),

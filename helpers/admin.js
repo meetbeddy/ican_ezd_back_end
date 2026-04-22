@@ -439,6 +439,57 @@ module.exports = {
 				.catch((err) => reject(err));
 		});
 	},
+	sendMessage: async function (data) {
+		const { type, group, subject, message, participants } = data;
+
+		let query = { status: "active" };
+		if (group === "virtual") query.venue = "virtual";
+		else if (group === "physical") query.venue = "physical";
+		else if (group === "members") query.memberStatus = "member";
+		else if (group === "nonmembers") query.memberStatus = "nonmember";
+		else if (group === "specific") {
+			if (!participants || participants.length === 0) {
+				return { message: "No participants selected." };
+			}
+			// query can fetch any user status if specifically selected
+			query = { _id: { $in: participants } };
+		}
+
+		let users = await User.find(query, this.usersProjection);
+
+		if (type === "sms") {
+			let phones = users.map((user) => user.phone).filter(Boolean);
+			if (phones.length === 0) return { message: "No phone numbers found." };
+
+			let dataToSend = phones.join(",");
+			await sms.sendMany(dataToSend, message);
+			return { message: `SMS queued for ${phones.length} users.` };
+		} else if (type === "email") {
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+			console.log("Users fetched for email broadcast:", users.length);
+			console.log("Sample user data:", users[0]);
+			let validEmails = users.map(user => user.email).filter(e => e && emailRegex.test(e));
+
+			if (validEmails.length === 0) return { message: "No valid emails found." };
+
+			const htmlBody = email.broadcastMessage(subject, message);
+
+			const sendEmailsInBackground = async () => {
+				const batchSize = 10;
+				for (let i = 0; i < validEmails.length; i += batchSize) {
+					const batch = validEmails.slice(i, i + batchSize);
+					await Promise.allSettled(batch.map(e => mailgun.sendMail(e, subject, htmlBody)));
+					await new Promise(resolve => setTimeout(resolve, 2000)); // compulsory wait
+				}
+			};
+			sendEmailsInBackground().catch(err => console.error("Error in background email broadcast:", err));
+
+			return { message: `Email queued for ${validEmails.length} users.` };
+		}
+
+		return { message: "Invalid message type." };
+	},
 	getStats: async function (req, res, next) {
 		try {
 			const stats = {};

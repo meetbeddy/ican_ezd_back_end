@@ -13,53 +13,60 @@ module.exports = {
                 margin: 0;
                 padding: 0;
                 font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                background-color: #f5f7fa;
+                background-color: #f1f5f9;
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
             }
             .email-container {
                 max-width: 600px;
-                margin: 0 auto;
+                margin: 40px auto;
                 background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                overflow: hidden;
             }
             .header {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
                 padding: 40px 20px;
                 text-align: center;
+                border-bottom: 3px solid #3b82f6;
             }
             .header img {
-                max-width: 100px;
+                max-width: 55px;
                 height: auto;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             }
             .content {
-                padding: 40px 30px;
+                padding: 48px 40px;
             }
             .greeting {
-                font-size: 24px;
+                font-size: 22px;
                 font-weight: 700;
-                color: #1a202c;
+                color: #0f172a;
                 margin-bottom: 16px;
             }
             .text {
                 font-size: 16px;
-                line-height: 1.6;
-                color: #4a5568;
-                margin-bottom: 16px;
+                line-height: 1.7;
+                color: #334155;
+                margin-bottom: 20px;
             }
             .highlight-box {
-                background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
-                border-left: 4px solid #667eea;
-                padding: 20px;
-                margin: 24px 0;
-                border-radius: 8px;
+                background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+                border-left: 4px solid #3b82f6;
+                padding: 24px;
+                margin: 32px 0;
+                border-radius: 0 8px 8px 0;
             }
             .discount-banner {
-                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                background: linear-gradient(135deg, #059669 0%, #047857 100%);
                 color: white;
                 padding: 16px 20px;
                 border-radius: 8px;
                 margin: 24px 0;
                 text-align: center;
+                box-shadow: 0 4px 6px rgba(5, 150, 105, 0.2);
             }
             .discount-banner h3 {
                 margin: 0 0 8px 0;
@@ -685,6 +692,24 @@ module.exports = {
                     <strong>Best regards,</strong><br>
                     ICAN Eastern Zonal Conference Team
                 </p>
+            </div>
+
+        </div>`;
+    },
+
+    broadcastMessage: function (subject, body) {
+        return `
+        ${this.header}
+        <div class="email-container">
+            <div class="header">
+                <img src="https://i.ibb.co/H7VK22v/ICANLogo.jpg" alt="ICAN Logo">
+                <h1 style="color: white; margin: 16px 0 0 0; font-size: 28px;">${subject}</h1>
+            </div>
+
+            <div class="content">
+                <div class="text">
+                    ${body.replace(/\n/g, '<br>')}
+                </div>
             </div>
 
             ${this.footer}

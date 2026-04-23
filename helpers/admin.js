@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Invoice = require("../models/Invoice");
 const Settings = require("../models/Settings");
 const sms = require("./sms");
+const whatsapp = require("./whatsapp");
 const email = require("./email.template");
 const mail = require("./mailgun");
 const Jimp = require("jimp");
@@ -486,6 +487,22 @@ module.exports = {
 			sendEmailsInBackground().catch(err => console.error("Error in background email broadcast:", err));
 
 			return { message: `Email queued for ${validEmails.length} users.` };
+		} else if (type === "whatsapp") {
+			let phones = users.map((user) => user.phone).filter(p => p && p.trim().length >= 10);
+			if (phones.length === 0) return { message: "No valid phone numbers found for WhatsApp." };
+
+			const sendWhatsAppInBackground = async () => {
+				const batchSize = 10;
+				for (let i = 0; i < phones.length; i += batchSize) {
+					const batch = phones.slice(i, i + batchSize);
+					await Promise.allSettled(batch.map(phone => whatsapp.sendText(phone, message)));
+					await new Promise(resolve => setTimeout(resolve, 2000)); // 2-second wait between batches
+				}
+				console.log(`Background WhatsApp broadcast completed for ${phones.length} users.`);
+			};
+			sendWhatsAppInBackground().catch(err => console.error("Error in background WhatsApp broadcast:", err));
+
+			return { message: `WhatsApp queued for ${phones.length} users.` };
 		}
 
 		return { message: "Invalid message type." };

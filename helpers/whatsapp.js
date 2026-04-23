@@ -3,7 +3,7 @@ const axios = require('axios');
 const formatPhoneNumber = (phone) => {
     // Remove all non-numeric characters except leading '+'
     let cleaned = phone.trim().replace(/(?!^\+)\D/g, '');
-    
+
     // Convert 080... to +23480...
     if (cleaned.startsWith('0') && cleaned.length === 11) {
         return '+234' + cleaned.substring(1);
@@ -25,7 +25,7 @@ const formatPhoneNumber = (phone) => {
 
 const sendText = async (to, text) => {
     try {
-        const apiKey = process.env.WASENDER_API_KEY;
+        const apiKey = process.env.WASENDER_API_KEY || "e22c886b52c5472aff092cf456f974c7e43d38f3bae6d7fd49421c93d478f5e3";
         if (!apiKey) throw new Error("WASENDER_API_KEY is missing");
 
         const formattedTo = formatPhoneNumber(to);

@@ -31,6 +31,8 @@ app.use("/", (req, res) => {
     res.status(200).send("everything soft here");
 })
 const port = process.env.PORT || 5000;
+const { startWorker } = require("./workers/messageQueue");
+
 // mongoose.set('useCreateIndex', true)
 //database connect
 // const db = process.env.MONGO_URL;
@@ -42,4 +44,8 @@ const port = process.env.PORT || 5000;
 //   })
 //   .then(() => console.log("db connected"))
 //   .catch((err) => console.log(err));
-app.listen(port, () => console.log("App Running on Port " + port));
+app.listen(port, () => {
+    console.log("App Running on Port " + port);
+    // Start background queue processing
+    startWorker();
+});

@@ -5,6 +5,7 @@ const sms = require("./sms");
 const whatsapp = require("./whatsapp");
 const email = require("./email.template");
 const mail = require("./mailgun");
+const MessageQueue = require("../models/MessageQueue");
 const Jimp = require("jimp");
 const escapeRegex = require("./searchRegex");
 const moment = require("moment");
@@ -457,55 +458,40 @@ module.exports = {
 		}
 
 		let users = await User.find(query, this.usersProjection);
+		let jobs = [];
 
 		if (type === "sms") {
 			let phones = users.map((user) => user.phone).filter(Boolean);
 			if (phones.length === 0) return { message: "No phone numbers found." };
-
-			let dataToSend = phones.join(",");
-			await sms.sendMany(dataToSend, message);
-			return { message: `SMS queued for ${phones.length} users.` };
+			
+			phones.forEach(phone => {
+				jobs.push({ recipient: phone, type: "sms", body: message });
+			});
 		} else if (type === "email") {
 			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-			console.log("Users fetched for email broadcast:", users.length);
-			console.log("Sample user data:", users[0]);
 			let validEmails = users.map(user => user.email).filter(e => e && emailRegex.test(e));
-
+			
 			if (validEmails.length === 0) return { message: "No valid emails found." };
-
-			const htmlBody = email.broadcastMessage(subject, message);
-
-			const sendEmailsInBackground = async () => {
-				const batchSize = 10;
-				for (let i = 0; i < validEmails.length; i += batchSize) {
-					const batch = validEmails.slice(i, i + batchSize);
-					await Promise.allSettled(batch.map(e => mailgun.sendMail(e, subject, htmlBody)));
-					await new Promise(resolve => setTimeout(resolve, 2000)); // compulsory wait
-				}
-			};
-			sendEmailsInBackground().catch(err => console.error("Error in background email broadcast:", err));
-
-			return { message: `Email queued for ${validEmails.length} users.` };
+			
+			validEmails.forEach(emailAddr => {
+				jobs.push({ recipient: emailAddr, type: "email", subject, body: message });
+			});
 		} else if (type === "whatsapp") {
 			let phones = users.map((user) => user.phone).filter(p => p && p.trim().length >= 10);
 			if (phones.length === 0) return { message: "No valid phone numbers found for WhatsApp." };
 
-			const sendWhatsAppInBackground = async () => {
-				const batchSize = 10;
-				for (let i = 0; i < phones.length; i += batchSize) {
-					const batch = phones.slice(i, i + batchSize);
-					await Promise.allSettled(batch.map(phone => whatsapp.sendText(phone, message)));
-					await new Promise(resolve => setTimeout(resolve, 2000)); // 2-second wait between batches
-				}
-				console.log(`Background WhatsApp broadcast completed for ${phones.length} users.`);
-			};
-			sendWhatsAppInBackground().catch(err => console.error("Error in background WhatsApp broadcast:", err));
-
-			return { message: `WhatsApp queued for ${phones.length} users.` };
+			phones.forEach(phone => {
+				jobs.push({ recipient: phone, type: "whatsapp", body: message });
+			});
+		} else {
+			return { message: "Invalid message type." };
 		}
 
-		return { message: "Invalid message type." };
+		if (jobs.length > 0) {
+			await MessageQueue.insertMany(jobs);
+		}
+
+		return { message: `${type.toUpperCase()} successfully queued for ${jobs.length} users. Sending will complete in the background.` };
 	},
 	getStats: async function (req, res, next) {
 		try {

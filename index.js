@@ -15,7 +15,7 @@ const env = require("dotenv");
 env.config();
 
 const app = express();
-connect_db();
+// connect_db(); // Removed from here, moved to listen block below
 app.use(bodyParser.json({ limit: "100mb" }));
 // app.use(express.bodyParser({limit: '50mb'}));
 app.use(passport.initialize());
@@ -44,8 +44,14 @@ const { startWorker } = require("./workers/messageQueue");
 //   })
 //   .then(() => console.log("db connected"))
 //   .catch((err) => console.log(err));
-app.listen(port, () => {
-    console.log("App Running on Port " + port);
-    // Start background queue processing
-    startWorker();
+// database connect
+connect_db().then(() => {
+    app.listen(port, () => {
+        console.log("App Running on Port " + port);
+        // Start background queue processing
+        startWorker();
+    });
+}).catch(err => {
+    console.error("Failed to start application due to database connection error.");
+    // process.exit(1);
 });

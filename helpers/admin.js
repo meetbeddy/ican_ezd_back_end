@@ -388,8 +388,8 @@ module.exports = {
 	},
 	sendCertificate: async function () {
 		const total = await User.countDocuments({});
-		const page = 3;
-		const LIMIT = 20;
+		const page = 4;
+		const LIMIT = 200;
 		const startIndex = (Number(page) - 1) * LIMIT; // get the starting index of every page
 
 		console.log("pages -", Math.ceil(total / LIMIT));
@@ -405,6 +405,7 @@ module.exports = {
 			.limit(LIMIT)
 			.skip(startIndex);
 
+
 		// let users = [
 		// 	{
 		// 		email: "katlybedrick@gmail.com",
@@ -416,15 +417,23 @@ module.exports = {
 		// let users = await User.find({ email: "meetbeddy@gmail.com" });
 		// const users = obed.filter((user) => user.confirmedPayment);
 
-		return new Promise((resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			if ((setting && !setting.certificate) || !setting) {
 				resolve(
 					"PLEASE CLICK THE 'START CERTIFICATE DISTRIBUTION' BUTTON TO SET CERTIFICATE TRUE"
 				);
 			}
-			users.forEach((user) => {
-				cert.sendAfterConfirmed(user);
-			});
+
+			console.log(`Starting sequential distribution for ${users.length} users...`);
+			for (let i = 0; i < users.length; i++) {
+				const user = users[i];
+				console.log(`[${i + 1}/${users.length}] sending cert to -`, user.email);
+				try {
+					await cert.sendAfterConfirmed(user);
+				} catch (err) {
+					console.error(`Failed to send cert to ${user.email}:`, err.message);
+				}
+			}
 			resolve(users);
 		});
 	},
@@ -463,16 +472,16 @@ module.exports = {
 		if (type === "sms") {
 			let phones = users.map((user) => user.phone).filter(Boolean);
 			if (phones.length === 0) return { message: "No phone numbers found." };
-			
+
 			phones.forEach(phone => {
 				jobs.push({ recipient: phone, type: "sms", body: message });
 			});
 		} else if (type === "email") {
 			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 			let validEmails = users.map(user => user.email).filter(e => e && emailRegex.test(e));
-			
+
 			if (validEmails.length === 0) return { message: "No valid emails found." };
-			
+
 			validEmails.forEach(emailAddr => {
 				jobs.push({ recipient: emailAddr, type: "email", subject, body: message });
 			});

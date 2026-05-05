@@ -401,9 +401,9 @@ module.exports = {
 		// users = users.filter((user) => user.confirmedPayment);
 
 		const users = await User.find({ confirmedPayment: true })
-			.sort({ _id: 1 })
-			.limit(LIMIT)
-			.skip(startIndex);
+		// .sort({ _id: 1 })
+		// .limit(LIMIT)
+		// .skip(startIndex);
 
 
 		// let users = [

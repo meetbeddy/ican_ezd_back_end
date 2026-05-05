@@ -13,29 +13,30 @@ let cachedFont = null;
 let setupPromise = null;
 
 const setUp = async () => {
-	if (setupPromise) return setupPromise;
+	if (!setupPromise) {
+		setupPromise = (async () => {
+			if (!cachedTemplate || !cachedFont) {
+				console.log("Loading certificate template and font into memory...");
+				const cert = await Jimp.read("ezd-certificate 2026.jpeg");
+				const customFont = path.join(__dirname, "..", "fonts", "merienda-28.fnt");
+				const origImageDim = { width: cert.bitmap.width, height: cert.bitmap.height };
 
-	setupPromise = (async () => {
-		if (!cachedTemplate || !cachedFont) {
-			console.log("Loading certificate template and font into memory...");
-			const cert = await Jimp.read("ezd-certificate 2026.jpeg");
-			const customFont = path.join(__dirname, "..", "fonts", "merienda-28.fnt");
-			const origImageDim = { width: cert.bitmap.width, height: cert.bitmap.height };
-			
-			// Pre-resize the template to save time on every generation
-			cert.resize((origImageDim.width * 51) / 100, (origImageDim.height * 51) / 100).quality(70);
-			
-			cachedTemplate = cert;
-			cachedFont = await Jimp.loadFont(customFont);
-			console.log("Template and font cached successfully.");
-		}
-		return {
-			cert: cachedTemplate.clone(),
-			font: cachedFont,
-		};
-	})();
+				// Pre-resize the template to save time on every generation
+				cert.resize((origImageDim.width * 51) / 100, (origImageDim.height * 51) / 100).quality(80);
 
-	return setupPromise;
+				cachedTemplate = cert;
+				cachedFont = await Jimp.loadFont(customFont);
+				console.log("Template and font cached successfully.");
+			}
+		})();
+	}
+
+	await setupPromise;
+
+	return {
+		cert: cachedTemplate.clone(),
+		font: cachedFont,
+	};
 };
 
 const printScaledText = async (image, font, text, y, scaleFactor = 5) => {
@@ -80,10 +81,10 @@ const printCert = async ({ cert, font, name, email, mail }) => {
 	console.log(name, mail);
 	await printScaledText(cert, font, name, 1050, 5);
 
-	cert.write(`certs/${name}.png`);
+	// cert.write(`certs/${name}.jpg`);
 
 	if (mail) {
-		return cert.getBase64(Jimp.MIME_PNG, function (err, data) {
+		return cert.getBase64(Jimp.MIME_JPEG, function (err, data) {
 			return mailgun.sendCert(
 				email,
 				data,
@@ -109,7 +110,7 @@ module.exports = {
 
 		await printScaledText(cert, font, userName, 1050, 5);
 
-		cert.getBase64(Jimp.MIME_PNG, function (err, data) {
+		cert.getBase64(Jimp.MIME_JPEG, function (err, data) {
 			cb(data);
 		});
 	},

@@ -400,22 +400,7 @@ module.exports = {
 		// let users = await this.getAllUsers();
 		// users = users.filter((user) => user.confirmedPayment);
 
-		const users = await User.find({ confirmedPayment: true })
-		// .sort({ _id: 1 })
-		// .limit(LIMIT)
-		// .skip(startIndex);
-
-
-		// let users = [
-		// 	{
-		// 		email: "katlybedrick@gmail.com",
-		// 		name: "Okpala Obeddy Ogechukwu",
-		// 		memberAcronym: "ACA",
-		// 	},
-		// ];
-		// let users = [];
-		// let users = await User.find({ email: "meetbeddy@gmail.com" });
-		// const users = obed.filter((user) => user.confirmedPayment);
+		const users = await User.find({ confirmedPayment: true, sentCertificate: { $ne: true } });
 
 		return new Promise(async (resolve, reject) => {
 			if ((setting && !setting.certificate) || !setting) {
@@ -425,13 +410,28 @@ module.exports = {
 			}
 
 			console.log(`Starting sequential distribution for ${users.length} users...`);
+			
+			const delay = ms => new Promise(res => setTimeout(res, ms));
+			const useDelay = users.length > 5;
+			if (useDelay) {
+				console.log(`Large user list detected (${users.length} users). Implementing a 38-second delay between emails to stay within Mailgun's 100/hour probation limit.`);
+			}
+
 			for (let i = 0; i < users.length; i++) {
 				const user = users[i];
 				console.log(`[${i + 1}/${users.length}] sending cert to -`, user.email);
 				try {
 					await cert.sendAfterConfirmed(user);
+					user.sentCertificate = true;
+					await user.save();
+					console.log(`Successfully sent cert to ${user.email} and saved state.`);
 				} catch (err) {
 					console.error(`Failed to send cert to ${user.email}:`, err.message);
+				}
+
+				if (useDelay && i < users.length - 1) {
+					console.log(`Waiting 38 seconds before next email...`);
+					await delay(38000);
 				}
 			}
 			resolve(users);

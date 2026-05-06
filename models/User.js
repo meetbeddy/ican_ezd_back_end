@@ -171,6 +171,7 @@ const userSchema = mongooseSchema(
 		},
 		amount: { type: Number, trim: true },
 		confirmedPayment: { type: Boolean, required: true, default: false },
+		sentCertificate: { type: Boolean, default: false },
 		paymentProof: { type: String, trim: true },
 	},
 	{ timestamps: true }

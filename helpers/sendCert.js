@@ -82,16 +82,15 @@ const printCert = async ({ cert, font, name, email, mail }) => {
 	await printScaledText(cert, font, name, 1050, 5);
 
 	// cert.write(`certs/${name}.jpg`);
-
+	//larryucy@gmail.com
 	if (mail) {
-		return cert.getBase64(Jimp.MIME_JPEG, function (err, data) {
-			return mailgun.sendCert(
-				email,
-				data,
-				"ICAN CERTIFICATE OF PARTICIPATION",
-				name
-			);
-		});
+		const data = await cert.getBase64Async(Jimp.MIME_JPEG);
+		return await mailgun.sendCert(
+			email,
+			data,
+			"ICAN CERTIFICATE OF PARTICIPATION",
+			name
+		);
 	}
 	return cert;
 };
@@ -102,7 +101,7 @@ module.exports = {
 
 		const { cert, font } = await setUp();
 
-		return await printCert({ cert, font, name: userName, email, mail: false });
+		return await printCert({ cert, font, name: userName, email, mail: true });
 	},
 	sendToProfile: async ({ name, memberAcronym }, cb) => {
 		const userName = nameFormatter(name, memberAcronym);

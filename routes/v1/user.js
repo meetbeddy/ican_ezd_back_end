@@ -20,7 +20,7 @@ router.get("/certificate",
       res.json(data);
     }).catch(err => {
     console.log("🚀 ~ file: user.js ~ line 22 ~ userHelper.getCertificate ~ err", err)
-      res.status(s00).json(err)
+      res.status(500).json(err)
     })
     
 

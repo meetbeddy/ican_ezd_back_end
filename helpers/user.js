@@ -15,8 +15,7 @@ module.exports = {
                 } else {
                     resolve(null)
                 }
-            }
-            ).then(err => reject(err))
+            }).catch(err => reject(err))
         })
     },
     getCertificate: async function (user) {
@@ -24,7 +23,7 @@ module.exports = {
         let setting = await Setting.findOne({});
         return new Promise((resolve, reject) => {
             if (!user.confirmedPayment) {
-                resolve("NO CERTIFICATE AVAILABLE FOR YOU NOW")
+                return resolve("NO CERTIFICATE AVAILABLE FOR YOU NOW")
             }
             cert.sendToProfile(user, (data) => {
                 if(data) return resolve(data);
